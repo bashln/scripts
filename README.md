@@ -1,93 +1,186 @@
-# bashln-scripts
+# 🧩 bshln-scripts
 
+Coleção de scripts Bash para pós-instalação e setup completo de ambiente Arch Linux.  
+Automatiza a instalação de ferramentas de desenvolvimento, linguagens, utilitários e configurações pessoais.
 
+Cada script foi projetado para ser **idempotente** — você pode executá-los quantas vezes quiser sem quebrar o sistema ou repetir tarefas desnecessárias.
 
-## Getting started
+---
 
-To make it easy for you to get started with GitLab, here's a list of recommended next steps.
+## 🚀 Objetivo
 
-Already a pro? Just edit this README.md and make it your own. Want to make it easy? [Use the template at the bottom](#editing-this-readme)!
+Facilitar a configuração de novos sistemas e ambientes de trabalho de forma segura, reprodutível e modular.
 
-## Add your files
+Esses scripts foram escritos para:
 
-- [ ] [Create](https://docs.gitlab.com/ee/user/project/repository/web_editor.html#create-a-file) or [upload](https://docs.gitlab.com/ee/user/project/repository/web_editor.html#upload-a-file) files
-- [ ] [Add files using the command line](https://docs.gitlab.com/topics/git/add_files/#add-files-to-a-git-repository) or push an existing Git repository with the following command:
+- Recriar rapidamente o ambiente de desenvolvimento completo.
+- Serem executados individualmente ou em sequência.
+- Evitar reinstalações desnecessárias.
+- Ser legíveis, simples e padronizados.
 
+---
+
+## 🧠 Estrutura do projeto
+
+bshln-scripts/
+├── install-all.sh # Executa todos os scripts em ordem
+├── modelo.sh # Modelo padrão para novos scripts
+├── lib.sh # (opcional) Funções globais de log
+├── install-\*.sh # Scripts individuais de instalação
+│
+├── configure-git.sh # Exemplo de configuração (Git)
+├── install-ohmybash-starship.sh # Instalação do Oh My Bash + Starship
+├── install-dotfiles.sh # Aplica dotfiles com GNU Stow
+├── set-shell.sh # Define Zsh como shell padrão
+└── ... # Outros scripts de setup
+
+Cada script segue o mesmo padrão:
+
+```bash
+set -euo pipefail
+info()  { printf "\e[34m[*]\e[0m %s\n" "$*"; }
+ok()    { printf "\e[32m[+]\e[0m %s\n" "$*"; }
+warn()  { printf "\e[33m[!]\e[0m %s\n" "$*"; }
+fail()  { printf "\e[31m[✗]\e[0m %s\n" "$*"; }
 ```
-cd existing_repo
-git remote add origin https://gitlab.com/bashln/bashln-scripts.git
-git branch -M main
-git push -uf origin main
+
+⚙️ Como usar
+
+1. Clonar o repositório
+
+```bash
+
+git clone https://gitlab.com/teuusuario/bshln-scripts.git
+cd bshln-scripts
 ```
 
-## Integrate with your tools
+2. Tornar scripts executáveis
 
-- [ ] [Set up project integrations](https://gitlab.com/bashln/bashln-scripts/-/settings/integrations)
+```bash
 
-## Collaborate with your team
+chmod +x *.sh
+```
 
-- [ ] [Invite team members and collaborators](https://docs.gitlab.com/ee/user/project/members/)
-- [ ] [Create a new merge request](https://docs.gitlab.com/ee/user/project/merge_requests/creating_merge_requests.html)
-- [ ] [Automatically close issues from merge requests](https://docs.gitlab.com/ee/user/project/issues/managing_issues.html#closing-issues-automatically)
-- [ ] [Enable merge request approvals](https://docs.gitlab.com/ee/user/project/merge_requests/approvals/)
-- [ ] [Set auto-merge](https://docs.gitlab.com/user/project/merge_requests/auto_merge/)
+3. Executar o instalador principal
 
-## Test and Deploy
+```bash
 
-Use the built-in continuous integration in GitLab.
+./install-all.sh
+```
 
-- [ ] [Get started with GitLab CI/CD](https://docs.gitlab.com/ee/ci/quick_start/)
-- [ ] [Analyze your code for known vulnerabilities with Static Application Security Testing (SAST)](https://docs.gitlab.com/ee/user/application_security/sast/)
-- [ ] [Deploy to Kubernetes, Amazon EC2, or Amazon ECS using Auto Deploy](https://docs.gitlab.com/ee/topics/autodevops/requirements.html)
-- [ ] [Use pull-based deployments for improved Kubernetes management](https://docs.gitlab.com/ee/user/clusters/agent/)
-- [ ] [Set up protected environments](https://docs.gitlab.com/ee/ci/environments/protected_environments.html)
+O script install-all.sh irá executar todos os scripts em ordem.
+Se algum falhar, ele registra o erro mas continua a execução (modo resiliente).
 
-***
+Você também pode rodar um script individual:
 
-# Editing this README
+```bash
 
-When you're ready to make this README your own, just edit this file and use the handy template below (or feel free to structure it however you want - this is just a starting point!). Thanks to [makeareadme.com](https://www.makeareadme.com/) for this template.
+./install-ohmybash-starship.sh
+```
 
-## Suggestions for a good README
+## 🔁 Idempotência
 
-Every project is different, so consider which of these sections apply to yours. The sections used in the template are suggestions for most open source projects. Also keep in mind that while a README can be too long and detailed, too long is better than too short. If you think your README is too long, consider utilizing another form of documentation rather than cutting out information.
+Todos os scripts foram escritos para poderem ser executados várias vezes sem causar erros ou reinstalações desnecessárias.
 
-## Name
-Choose a self-explaining name for your project.
+Por exemplo:
 
-## Description
-Let people know what your project can do specifically. Provide context and add a link to any reference visitors might be unfamiliar with. A list of Features or a Background subsection can also be added here. If there are alternatives to your project, this is a good place to list differentiating factors.
+    Se o pacote já está instalado → apenas registra e pula.
 
-## Badges
-On some READMEs, you may see small images that convey metadata, such as whether or not all the tests are passing for the project. You can use Shields to add some to your README. Many services also have instructions for adding a badge.
+    Se o repositório já foi clonado → apenas atualiza com git pull.
 
-## Visuals
-Depending on what you are making, it can be a good idea to include screenshots or even a video (you'll frequently see GIFs rather than actual videos). Tools like ttygif can help, but check out Asciinema for a more sophisticated method.
+    Se a configuração já existe → nada é sobrescrito.
 
-## Installation
-Within a particular ecosystem, there may be a common way of installing things, such as using Yarn, NuGet, or Homebrew. However, consider the possibility that whoever is reading your README is a novice and would like more guidance. Listing specific steps helps remove ambiguity and gets people to using your project as quickly as possible. If it only runs in a specific context like a particular programming language version or operating system or has dependencies that have to be installed manually, also add a Requirements subsection.
+🧩 Criando novos scripts
 
-## Usage
-Use examples liberally, and show the expected output if you can. It's helpful to have inline the smallest example of usage that you can demonstrate, while providing links to more sophisticated examples if they are too long to reasonably include in the README.
+Para adicionar um novo script, basta copiar o modelo:
 
-## Support
-Tell people where they can go to for help. It can be any combination of an issue tracker, a chat room, an email address, etc.
+```bash
 
-## Roadmap
-If you have ideas for releases in the future, it is a good idea to list them in the README.
+cp modelo.sh install-nome-da-ferramenta.sh
+chmod +x install-nome-da-ferramenta.sh
+```
 
-## Contributing
-State if you are open to contributions and what your requirements are for accepting them.
+Edite apenas a função main() e adicione o nome do novo arquivo ao array steps dentro de install-all.sh.
 
-For people who want to make changes to your project, it's helpful to have some documentation on how to get started. Perhaps there is a script that they should run or some environment variables that they need to set. Make these steps explicit. These instructions could also be useful to your future self.
+Exemplo de trecho em install-all.sh:
 
-You can also document commands to lint the code or run tests. These steps help to ensure high code quality and reduce the likelihood that the changes inadvertently break something. Having instructions for running tests is especially helpful if it requires external setup, such as starting a Selenium server for testing in a browser.
+```bash
 
-## Authors and acknowledgment
-Show your appreciation to those who have contributed to the project.
+local steps=(
+  install-nodejs.sh
+  install-rust.sh
+  install-nome-da-ferramenta.sh  # novo script aqui
+)
+```
 
-## License
-For open source projects, say how it is licensed.
+## 🔒 Permissões e sudo
 
-## Project status
-If you have run out of energy or time for your project, put a note at the top of the README saying that development has slowed down or stopped completely. Someone may choose to fork your project or volunteer to step in as a maintainer or owner, allowing your project to keep going. You can also make an explicit request for maintainers.
+Os scripts detectam automaticamente se estão sendo executados como root.
+Se não estiver, o sudo será usado nas operações que exigem privilégios.
+
+## 🧰 Dependências básicas
+
+Antes de rodar o setup completo, certifique-se de que tem o mínimo necessário instalado:
+
+```bash
+
+sudo pacman -S --needed git base-devel curl
+```
+
+## 🧙‍♂️ Filosofia
+
+Este projeto segue alguns princípios:
+
+- Idempotência: rodar 100 vezes deve dar o mesmo resultado.
+
+- Legibilidade: código simples > “mágico”.
+
+- Autonomia: cada script faz uma coisa só.
+
+- Logs claros: sempre saber o que foi feito e o que falhou.
+
+- Reprodutibilidade: do zero ao ambiente pronto em minutos.
+
+## 🛠️ Exemplos de scripts incluídos
+
+Script Descrição
+install-base-devel.sh Instala ferramentas de compilação básicas
+install-flatpak-flathub.sh Configura o Flatpak com o repositório Flathub
+install-go-tools.sh Instala gopls, goimports e outras ferramentas Go
+install-ohmybash-starship.sh Instala Oh My Bash + Starship Prompt
+install-tmux.sh Instala e configura tmux + TPM
+install-dotfiles.sh Clona e aplica seus dotfiles com GNU Stow
+set-shell.sh Define Zsh como shell padrão
+
+## 🧩 Exemplo de saída
+
+[*] Executando: install-nodejs.sh
+[+] nodejs já está instalado.
+[*] Executando: install-vscode.sh
+[+] Visual Studio Code instalado com sucesso.
+[!] Falha ao instalar Steam (pacote ausente no repositório)
+[+] Todas as etapas concluídas!
+
+## 💬 Contribuição
+
+Crie uma branch:
+
+````bash
+
+git checkout -b feature/novo-script
+```wbash
+
+Copie o modelo (modelo.sh) e adicione sua automação.
+
+Teste localmente rodando:
+```bash
+
+    ./install-novo-script.sh
+````
+
+Faça commit e abra um merge request no GitLab.
+
+## 🧾 Licença
+
+Este projeto é distribuído sob a licença MIT.
+Use, modifique e compartilhe livremente, mas mencione a origem se for reutilizar partes do código.

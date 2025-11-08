@@ -1,0 +1,32 @@
+#!/bin/bash
+set -euo pipefail
+
+log()  { printf '[*] %s\n' "$*"; }
+ok()   { printf '[+] %s\n' "$*"; }
+warn() { printf '[!] %s\n' "$*"; }
+
+main() {
+  if ! command -v git >/dev/null 2>&1; then
+    warn "git não encontrado; instale antes de configurar."
+    return
+  fi
+
+  if git config --global user.email >/dev/null 2>&1 && \
+     git config --global user.name  >/dev/null 2>&1; then
+    ok "Git global já configurado (user.name/user.email)."
+    return
+  fi
+
+  log "Configurando Git global..."
+
+  read -rp "Digite seu email para Git: " git_email
+  read -rp "Digite seu nome para Git: " git_name
+
+  git config --global user.email "${git_email}"
+  git config --global user.name "${git_name}"
+
+  ok "Git configurado com user.name e user.email globais."
+}
+
+main "$@"
+
