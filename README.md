@@ -45,7 +45,7 @@ warn()  { printf "\e[33m[!]\e[0m %s\n" "$*"; }
 fail()  { printf "\e[31m[✗]\e[0m %s\n" "$*"; }
 ```
 
-⚙️ Como usar
+## ⚙️ Como usar
 
 1. Clonar o repositório
 
