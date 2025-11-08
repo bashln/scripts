@@ -24,16 +24,16 @@ Esses scripts foram escritos para:
 
 - bshln-scripts/scripts
 
-├── install-all.sh # Executa todos os scripts em ordem  
-├── modelo.sh # Modelo padrão para novos scripts  
-├── lib.sh # (opcional) Funções globais de log  
-├── install-\*.sh # Scripts individuais de instalação  
-│  
-├── configure-git.sh # Exemplo de configuração (Git)  
-├── install-ohmybash-starship.sh # Instalação do Oh My Bash + Starship  
-├── install-dotfiles.sh # Aplica dotfiles com GNU Stow  
-├── set-shell.sh # Define Zsh como shell padrão  
-└── ... # Outros scripts de setup
+  ├── install-all.sh # Executa todos os scripts em ordem  
+  ├── modelo.sh # Modelo padrão para novos scripts  
+  ├── lib.sh # (opcional) Funções globais de log  
+  ├── install-\*.sh # Scripts individuais de instalação  
+  │  
+  ├── configure-git.sh # Exemplo de configuração (Git)  
+  ├── install-ohmybash-starship.sh # Instalação do Oh My Bash + Starship  
+  ├── install-dotfiles.sh # Aplica dotfiles com GNU Stow  
+  ├── set-shell.sh # Define Zsh como shell padrão  
+  └── ... # Outros scripts de setup
 
 - Cada script segue o mesmo padrão:
 
