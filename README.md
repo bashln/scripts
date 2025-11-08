@@ -22,7 +22,7 @@ Esses scripts foram escritos para:
 
 ## 🧠 Estrutura do projeto
 
-bshln-scripts/
+bshln-scripts/scripts
 ├── install-all.sh # Executa todos os scripts em ordem
 ├── modelo.sh # Modelo padrão para novos scripts
 ├── lib.sh # (opcional) Funções globais de log
@@ -52,6 +52,7 @@ fail()  { printf "\e[31m[✗]\e[0m %s\n" "$*"; }
 
 git clone https://gitlab.com/teuusuario/bshln-scripts.git
 cd bshln-scripts
+cd scripts/
 ```
 
 2. Tornar scripts executáveis
@@ -84,11 +85,11 @@ Todos os scripts foram escritos para poderem ser executados várias vezes sem ca
 
 Por exemplo:
 
-    Se o pacote já está instalado → apenas registra e pula.
+Se o pacote já está instalado → apenas registra e pula.
 
-    Se o repositório já foi clonado → apenas atualiza com git pull.
+Se o repositório já foi clonado → apenas atualiza com git pull.
 
-    Se a configuração já existe → nada é sobrescrito.
+Se a configuração já existe → nada é sobrescrito.
 
 🧩 Criando novos scripts
 
@@ -143,23 +144,28 @@ Este projeto segue alguns princípios:
 
 ## 🛠️ Exemplos de scripts incluídos
 
-Script Descrição
-install-base-devel.sh Instala ferramentas de compilação básicas
-install-flatpak-flathub.sh Configura o Flatpak com o repositório Flathub
-install-go-tools.sh Instala gopls, goimports e outras ferramentas Go
-install-ohmybash-starship.sh Instala Oh My Bash + Starship Prompt
-install-tmux.sh Instala e configura tmux + TPM
-install-dotfiles.sh Clona e aplica seus dotfiles com GNU Stow
-set-shell.sh Define Zsh como shell padrão
+- Script Descrição
+  - install-base-devel.sh -> Instala ferramentas de compilação básicas
+  - ainstall-flatpak-flathub.sh Configura o Flatpak com o repositório Flathub
+  - install-go-tools.sh Instala gopls, goimports e outras ferramentas Go
+  - install-ohmybash-starship.sh Instala Oh My Bash + Starship Prompt
+  - install-tmux.sh Instala e configura tmux + TPM
+  - install-dotfiles.sh Clona e aplica seus dotfiles com GNU Stow
+  - set-shell.sh Define Zsh como shell padrão
 
 ## 🧩 Exemplo de saída
 
-[*] Executando: install-nodejs.sh
-[+] nodejs já está instalado.
-[*] Executando: install-vscode.sh
-[+] Visual Studio Code instalado com sucesso.
-[!] Falha ao instalar Steam (pacote ausente no repositório)
-[+] Todas as etapas concluídas!
+- [*] Executando: install-nodejs.sh
+
+- [+] nodejs já está instalado.
+
+- [*] Executando: install-vscode.sh
+
+- [+] Visual Studio Code instalado com sucesso.
+
+- [!] Falha ao instalar Steam (pacote ausente no repositório)
+
+- [+] Todas as etapas concluídas!
 
 ## 💬 Contribuição
 
@@ -183,4 +189,5 @@ Faça commit e abra um merge request no GitLab.
 ## 🧾 Licença
 
 Este projeto é distribuído sob a licença MIT.
+
 Use, modifique e compartilhe livremente, mas mencione a origem se for reutilizar partes do código.
