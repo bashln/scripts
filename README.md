@@ -28,7 +28,7 @@ Esses scripts foram escritos para:
 ├── modelo.sh # Modelo padrão para novos scripts  
 ├── lib.sh # (opcional) Funções globais de log  
 ├── install-\*.sh # Scripts individuais de instalação  
-│
+│  
 ├── configure-git.sh # Exemplo de configuração (Git)  
 ├── install-ohmybash-starship.sh # Instalação do Oh My Bash + Starship  
 ├── install-dotfiles.sh # Aplica dotfiles com GNU Stow  
