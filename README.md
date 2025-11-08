@@ -92,7 +92,7 @@ Se o repositório já foi clonado → apenas atualiza com git pull.
 
 Se a configuração já existe → nada é sobrescrito.
 
-🧩 Criando novos scripts
+## 🧩 Criando novos scripts
 
 Para adicionar um novo script, basta copiar o modelo:
 
