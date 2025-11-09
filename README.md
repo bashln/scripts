@@ -172,18 +172,19 @@ Este projeto segue alguns princípios:
 
 Crie uma branch:
 
-````bash
+```bash
 
 git checkout -b feature/novo-script
-```wbash
+```
 
 Copie o modelo (modelo.sh) e adicione sua automação.
 
 Teste localmente rodando:
+
 ```bash
 
     ./install-novo-script.sh
-````
+```
 
 Faça commit e abra um merge request no GitLab.
 
