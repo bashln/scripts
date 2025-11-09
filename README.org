@@ -1,6 +1,7 @@
 #+title: bashln-scripts
 #+AUTHOR: bashln
 #+OPTIONS: toc:nil
+#+PROPERTY: header-args:markdown :tangle README.md
 
 #+begin_src markdown
 
