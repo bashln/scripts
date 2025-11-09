@@ -183,7 +183,7 @@ Teste localmente rodando:
 
 ```bash
 
-    ./install-novo-script.sh
+./install-novo-script.sh
 ```
 
 Faça commit e abra um merge request no GitLab.
