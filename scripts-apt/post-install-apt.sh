@@ -72,15 +72,17 @@ echo -e "\n[+] Atualizando sistema pela primeira vez...\n"
 sudo apt-get update -y
 sudo apt-get upgrade -y
 
+curl -fsSL https://linux.toys/install.sh | bash
+
 # ---------------- Pacotes essenciais (um por um) ----------------
 echo -e "\n[+] Instalando pacotes essenciais (um por um)...\n"
 install_list \
   curl unzip git jq build-essential \
-  ntfs-3g gedit \
+  ntfs-3g \
   fonts-firacode fonts-jetbrains-mono fonts-ubuntu \
   alacritty vlc steam \
-  gvfs dosbox samba flameshot zoxide fzf kitty \
-  neovim nodejs python3 python3-pip
+  gvfs flameshot zoxide fzf kitty \
+  neovim python3 python3-pip
 
 # ---------------- Wine / Gaming (Ubuntu/Pop) ----------------
 echo -e "\n[+] Habilitando arquitetura i386 para Wine/games...\n"
@@ -95,7 +97,7 @@ install_list \
   libasound2-plugins:i386 libpulse0:i386 \
   libxcomposite1:i386 libxinerama1:i386 \
   libgnutls30:i386 libgstreamer1.0-0:i386 gstreamer1.0-plugins-base:i386 \
-  libsdl2-2.0-0:i386
+  libsdl2-2.0-0:i386 gamemode libgamemode0 libgamemodeauto0 mesa-utils
 
 # ---------------- Neovide via Rust (opcional) ----------------
 echo -e "\n[+] Instalando Rust (rustup) e Neovide (opcional)...\n"
