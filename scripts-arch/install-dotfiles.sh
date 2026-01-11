@@ -1,40 +1,44 @@
 #!/bin/bash
+set -euo pipefail
 
-ORIGINAL_DIR=$(pwd)
 REPO_URL="git@gitlab.com:bashln/dotfiles.git"
 REPO_NAME="dotfiles"
 
-is_stow_installed() {
-  pacman -Qi "stow" &> /dev/null
+log() { printf '[*] %s\n' "$*"; }
+ok() { printf '[+] %s\n' "$*"; }
+warn() { printf '[!] %s\n' "$*"; }
+die() {
+  printf '[X] %s\n' "$*" >&2
+  exit 1
 }
 
-if ! is_stow_installed; then
-  echo "Install stow first"
-  exit 1
-fi
+# --- dependências ---
+command -v stow >/dev/null 2>&1 || die "stow não está instalado"
+command -v git >/dev/null 2>&1 || die "git não está instalado"
 
-cd ~
+cd "$HOME"
 
-# Check if the repository already exists
-if [ -d "$REPO_NAME" ]; then
-  echo "Repository '$REPO_NAME' already exists. Skipping clone"
+# --- clone do repo ---
+if [[ -d "$REPO_NAME" ]]; then
+  log "Repo '$REPO_NAME' já existe, usando o local"
 else
+  log "Clonando dotfiles..."
   git clone "$REPO_URL"
 fi
 
-# Check if the clone was successful
-if [ $? -eq 0 ]; then
-  echo "removing old configs"
-  rm -rf ~/.config/nvim ~/.config/starship.toml ~/.local/share/nvim/ ~/.cache/nvim/ ~/.config/ghostty/config
+cd "$REPO_NAME"
 
-  cd "$REPO_NAME"
-  stow zshrc
-  stow ghostty
-  stow tmux
-  stow nvim
-  stow starship
-else
-  echo "Failed to clone the repository."
-  exit 1
-fi
+# --- limpeza mínima (apenas o que costuma conflitar) ---
+# log "Removendo configs antigas conhecidas..."
+# rm -rf \
+#   "$HOME/.config/nvim" \
+#   "$HOME/.local/share/nvim" \
+#   "$HOME/.cache/nvim" \
+#   "$HOME/.config/starship.toml" \
+#   "$HOME/.config/ghostty/config"
 
+# --- aplicar dotfiles ---
+log "Aplicando dotfiles com stow..."
+stow .
+
+ok "Dotfiles aplicados com sucesso."

@@ -1,10 +1,9 @@
-
 #!/bin/bash
 set -euo pipefail
 
 # Manutenção completa do sistema (Arch/derivados)
 # - Atualiza mirrors (se pacman-mirrors existir)
-# - Ajusta keyring, glibc-locales e remove alguns pacotes específicos
+# - Ajusta keyring e remove alguns pacotes específicos
 # - Atualiza pacotes oficiais (pacman)
 # - Atualiza AUR (yay ou paru, se existirem)
 # - Atualiza Flatpak (se existir)
@@ -76,9 +75,6 @@ update_mirrors_and_base() {
     log "Removendo webkit2gtk-5.0 (Rdd)..."
     $SUDO pacman -Rdd webkit2gtk-5.0 --noconfirm || warn "Falha ao remover webkit2gtk-5.0."
   fi
-
-  log "Atualizando glibc-locales (com overwrite em /usr/lib/locale/*/*)..."
-  $SUDO pacman -Syu glibc-locales --overwrite /usr/lib/locale/*/* --noconfirm --needed || warn "Falha ao atualizar glibc-locales."
 
   ok "Etapa de mirrors/base finalizada."
   printf '\n'

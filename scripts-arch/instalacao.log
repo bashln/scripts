@@ -1,0 +1,498 @@
+[34m[*][0m Executando: autofs.sh
+[X] Execute como root (sudo).
+[31m[✗][0m autofs.sh falhou, continuando...
+
+[34m[*][0m Executando: configure-git.sh
+[+] Git global já configurado (user.name/user.email).
+[32m[+][0m configure-git.sh concluído com sucesso.
+
+[34m[*][0m Executando: fix-services.sh
+[!] systemd-binfmt não encontrado entre as units.
+[32m[+][0m fix-services.sh concluído com sucesso.
+
+[34m[*][0m Executando: install-alacritty.sh
+[*] Instalando alacritty
+warning: alacritty-0.16.1-1 is up to date -- skipping
+ there is nothing to do
+[+] alacritty instalado.
+[32m[+][0m install-alacritty.sh concluído com sucesso.
+
+[34m[*][0m Executando: install-asdf.sh
+[*] Instalando asdf-vm
+ -> asdf-vm-0.18.0-1 is up to date -- skipping
+ there is nothing to do
+[+] asdf-cm instalado.
+[32m[+][0m install-asdf.sh concluído com sucesso.
+
+[34m[*][0m Executando: install-base-devel.sh
+[*] Instalando base-devel
+warning: base-devel-1-2 is up to date -- skipping
+ there is nothing to do
+[+] base-devel instalado.
+[32m[+][0m install-base-devel.sh concluído com sucesso.
+
+[34m[*][0m Executando: install-cmake.sh
+[*] Instalando cmake
+warning: cmake-4.2.1-1 is up to date -- skipping
+ there is nothing to do
+[+] cmake instalado.
+[32m[+][0m install-cmake.sh concluído com sucesso.
+
+[34m[*][0m Executando: install-curl.sh
+[*] Instalando curl
+warning: curl-8.17.0-2 is up to date -- skipping
+ there is nothing to do
+[+] curl instalado.
+[32m[+][0m install-curl.sh concluído com sucesso.
+
+[34m[*][0m Executando: install-dotfiles.sh
+Repository 'dotfiles' already exists. Skipping clone
+removing old configs
+stow: ERROR: The stow directory dotfiles does not contain package zshrc
+stow: ERROR: The stow directory dotfiles does not contain package ghostty
+stow: ERROR: The stow directory dotfiles does not contain package tmux
+stow: ERROR: The stow directory dotfiles does not contain package nvim
+stow: ERROR: The stow directory dotfiles does not contain package starship
+[31m[✗][0m install-dotfiles.sh falhou, continuando...
+
+[34m[*][0m Executando: install-emacs.sh
+[*] Instalando emacs
+warning: emacs-30.2-1 is up to date -- skipping
+ there is nothing to do
+[+] emacs instalado.
+[32m[+][0m install-emacs.sh concluído com sucesso.
+
+[34m[*][0m Executando: install-eza.sh
+[*] Instalando eza
+warning: eza-0.23.4-1 is up to date -- skipping
+ there is nothing to do
+[+] eza instalado.
+[32m[+][0m install-eza.sh concluído com sucesso.
+
+[34m[*][0m Executando: install-flatpak-flathub.sh
+[!] Flatpak não encontrado; instale-o antes de configurar o Flathub.
+[31m[✗][0m install-flatpak-flathub.sh falhou, continuando...
+
+[34m[*][0m Executando: install-flatpak-pupgui2.sh
+[!] Flatpak não encontrado; instale-o antes de instalar apps Flatpak.
+[31m[✗][0m install-flatpak-pupgui2.sh falhou, continuando...
+
+[34m[*][0m Executando: install-flatpak-spotify.sh
+[!] Flatpak não encontrado; instale-o antes de instalar apps Flatpak.
+[31m[✗][0m install-flatpak-spotify.sh falhou, continuando...
+
+[34m[*][0m Executando: install-fonts.sh
+[*] Instalando fontes (programação + nerd fonts)...
+warning: ttf-fira-code-6.2-2 is up to date -- skipping
+warning: ttf-jetbrains-mono-2.304-2 is up to date -- skipping
+warning: ttf-ubuntu-font-family-1:0.83-2 is up to date -- skipping
+warning: ttf-space-mono-nerd-3.4.0-1 is up to date -- skipping
+warning: ttf-iosevka-nerd-3.4.0-1 is up to date -- skipping
+warning: ttf-inconsolata-nerd-3.4.0-1 is up to date -- skipping
+warning: ttf-jetbrains-mono-nerd-3.4.0-1 is up to date -- skipping
+ there is nothing to do
+[+] Fontes instaladas.
+[32m[+][0m install-fonts.sh concluído com sucesso.
+
+[34m[*][0m Executando: install-ghostty.sh
+/home/bashln/bashln/bashln-scripts/scripts-arch/install-ghostty.sh: line 16: syntax error near unexpected token `;'
+[31m[✗][0m install-ghostty.sh falhou, continuando...
+
+[34m[*][0m Executando: install-git.sh
+[*] Instalando git
+warning: git-2.52.0-2 is up to date -- skipping
+ there is nothing to do
+[+] git instalado.
+[32m[+][0m install-git.sh concluído com sucesso.
+
+[34m[*][0m Executando: install-go-tools.sh
+[!] Go não encontrado; tentando instalar via pacman...
+resolving dependencies...
+looking for conflicting packages...
+
+Package (1)  New Version  Net Change
+
+extra/go     2:1.25.5-1   191.60 MiB
+
+Total Installed Size:  191.60 MiB
+
+:: Proceed with installation? [Y/n] 
+checking keyring...
+checking package integrity...
+loading package files...
+checking for file conflicts...
+checking available disk space...
+:: Running pre-transaction hooks...
+(1/1) Wait for limine-snapper-sync to finish...
+:: Processing package changes...
+installing go...
+:: Running post-transaction hooks...
+(1/1) Arming ConditionNeedsUpdate...
+[+] Go instalado.
+[*] Instalando/atualizando gopls via 'go install'...
+[+] gopls instalado/atualizado em /home/bashln/go/bin.
+[32m[+][0m install-go-tools.sh concluído com sucesso.
+
+[34m[*][0m Executando: install-gvfs.sh
+[*] Instalando gvfs
+warning: gvfs-1.58.0-2 is up to date -- skipping
+ there is nothing to do
+[+] gvfs instalado.
+[32m[+][0m install-gvfs.sh concluído com sucesso.
+
+[34m[*][0m Executando: install-hyprland-overrides.sh
+Source line already exists in /home/bashln/.config/hypr/hyprland.conf
+Hyprland overrides setup complete!
+[32m[+][0m install-hyprland-overrides.sh concluído com sucesso.
+
+[34m[*][0m Executando: install-jq.sh
+[*] Instalando jq
+warning: jq-1.8.1-1 is up to date -- skipping
+ there is nothing to do
+[+] jq instalado.
+[32m[+][0m install-jq.sh concluído com sucesso.
+
+[34m[*][0m Executando: install-lazygit.sh
+[*] Instalando lazygit
+warning: lazygit-0.57.0-1 is up to date -- skipping
+ there is nothing to do
+[+] lazygit instalado.
+[32m[+][0m install-lazygit.sh concluído com sucesso.
+
+[34m[*][0m Executando: install-lib32-libs.sh
+[*] Instalando bibliotecas 32-bit auxiliares
+warning: lib32-giflib-5.2.2-1 is up to date -- skipping
+warning: lib32-gnutls-3.8.11-1 is up to date -- skipping
+warning: lib32-v4l-utils-1.32.0-1 is up to date -- skipping
+warning: lib32-libpulse-17.0+r93+gbe2efb69b-1 is up to date -- skipping
+warning: lib32-alsa-lib-1.2.14-2 is up to date -- skipping
+warning: lib32-libxcomposite-0.4.6-2 is up to date -- skipping
+warning: lib32-libxinerama-1.1.5-2 is up to date -- skipping
+warning: lib32-ocl-icd-2.3.3-1 is up to date -- skipping
+warning: lib32-gst-plugins-base-libs-1.26.9-1 is up to date -- skipping
+warning: lib32-sdl2-compat-2.32.60-1 is up to date -- skipping
+ there is nothing to do
+[+] Bibliotecas 32-bit instaladas.
+[32m[+][0m install-lib32-libs.sh concluído com sucesso.
+
+[34m[*][0m Executando: install-libva-utils.sh
+[*] Instalando libva-utils
+warning: libva-utils-2.22.0-1 is up to date -- skipping
+ there is nothing to do
+[+] libva-utils instalada.
+[32m[+][0m install-libva-utils.sh concluído com sucesso.
+
+[34m[*][0m Executando: install-linux-toys.sh
+[*] Instalando LinuxToys (script remoto)...
+  _      _               _______               
+ | |    (_)             |__   __|              
+ | |     _ _ __  _   ___  _| | ___  _   _ ___  
+ | |    | | '_ \| | | \ \/ / |/ _ \| | | / __| 
+ | |____| | | | | |_| |>  <| | (_) | |_| \__ \ 
+ |______|_|_| |_|\__,_/_/\_\_|\___/ \__, |___/ 
+                                     __/ |     
+                                    |___/      
+                QUICK-INSTALLER                
+
+==> ERROR: A package has already been built. (use -f to overwrite)
+[0;31m[ERROR][m Build failed (makepkg).
+[!] Falha ao instalar LinuxToys.
+[32m[+][0m install-linux-toys.sh concluído com sucesso.
+
+[34m[*][0m Executando: install-mesa-radeon.sh
+[*] Instalando Mesa e drivers Vulkan para Radeon
+warning: mesa-1:25.3.1-2 is up to date -- skipping
+warning: lib32-mesa-1:25.3.1-2 is up to date -- skipping
+warning: vulkan-radeon-1:25.3.1-2 is up to date -- skipping
+warning: lib32-vulkan-radeon-1:25.3.1-2 is up to date -- skipping
+ there is nothing to do
+[+] Mesa + Radeon stack instaladas.
+[32m[+][0m install-mesa-radeon.sh concluído com sucesso.
+
+[34m[*][0m Executando: install-nodejs.sh
+[*] Instalando nodejs e npm
+warning: nodejs-25.2.1-1 is up to date -- skipping
+warning: npm-11.6.4-1 is up to date -- skipping
+ there is nothing to do
+[+] Node.js e npm instalados.
+[32m[+][0m install-nodejs.sh concluído com sucesso.
+
+[34m[*][0m Executando: install-npm-global.sh
+[*] Instalando/atualizando pacotes globais npm para LSP/Dev...
+[*] Dica: configure um prefix de usuário para evitar sudo, por exemplo:
+[*]   npm config set prefix "$HOME/.npm-global"
+[*]   export PATH="$HOME/.npm-global/bin:$PATH"
+
+changed 237 packages in 14s
+
+44 packages are looking for funding
+  run `npm fund` for details
+[+] Pacotes npm globais instalados/atualizados.
+[32m[+][0m install-npm-global.sh concluído com sucesso.
+
+[34m[*][0m Executando: install-ntfs-3g.sh
+[*] Instalando ntfs-3g
+warning: ntfs-3g-2022.10.3-2 is up to date -- skipping
+ there is nothing to do
+[+] ntfs-3g instalado.
+[32m[+][0m install-ntfs-3g.sh concluído com sucesso.
+
+[34m[*][0m Executando: install-ohmybash-starship.sh
+[*] Instalando Oh My Bash...
+[+] Oh My Bash já está instalado.
+[*] Instalando Starship...
+[+] Starship já instalado.
+[+] Starship já configurado no Bash.
+[+] Oh My Bash + Starship prontos para uso.
+[32m[+][0m install-ohmybash-starship.sh concluído com sucesso.
+
+[34m[*][0m Executando: install-postgresql.sh
+Installing PostgreSQL...
+Sync Explicit (1): postgresql-18.1-1
+warning: postgresql-18.1-1 is up to date -- skipping
+ there is nothing to do
+Initializing PostgreSQL database...
+The files belonging to this database system will be owned by user "postgres".
+This user must also own the server process.
+
+The database cluster will be initialized with locale "C.UTF-8".
+The default text search configuration will be set to "english".
+
+Data page checksums are enabled.
+
+initdb: error: directory "/var/lib/postgres/data" exists but is not empty
+initdb: hint: If you want to create a new database system, either remove or empty the directory "/var/lib/postgres/data" or run initdb with an argument other than "/var/lib/postgres/data".
+Starting PostgreSQL service...
+Setting up PostgreSQL user...
+PostgreSQL user bashln already exists
+Database bashln already exists
+PostgreSQL installation and setup complete!
+You can now connect to PostgreSQL using: psql
+[32m[+][0m install-postgresql.sh concluído com sucesso.
+
+[34m[*][0m Executando: install-python-tools.sh
+[*] Instalando ferramentas Python (pylsp, black)
+error: target not found: python-pylsp
+[!] Falha ao instalar ferramentas Python.
+[32m[+][0m install-python-tools.sh concluído com sucesso.
+
+[34m[*][0m Executando: install-python.sh
+[*] Instalando Python
+warning: python-3.13.11-1 is up to date -- skipping
+ there is nothing to do
+[+] Python instalado.
+[32m[+][0m install-python.sh concluído com sucesso.
+
+[34m[*][0m Executando: install-ruby.sh
+Installing Ruby build dependencies...
+Sync Explicit (2): libyaml-0.2.5-3, base-devel-1-2
+Sync Dependency (6): libffi-3.5.2-1, gcc-15.2.1+r301+gf24307422d1d-1, make-4.4.1-2, openssl-3.6.0-1, readline-8.3.003-1, zlib-1:1.3.1-2
+warning: make-4.4.1-2 is up to date -- skipping
+warning: openssl-3.6.0-1 is up to date -- skipping
+warning: readline-8.3.003-1 is up to date -- skipping
+warning: zlib-1:1.3.1-2 is up to date -- skipping
+warning: libyaml-0.2.5-3 is up to date -- skipping
+warning: base-devel-1-2 is up to date -- skipping
+warning: libffi-3.5.2-1 is up to date -- skipping
+warning: gcc-15.2.1+r301+gf24307422d1d-1 is up to date -- skipping
+ there is nothing to do
+Ruby installation complete!
+[32m[+][0m install-ruby.sh concluído com sucesso.
+
+[34m[*][0m Executando: install-rust.sh
+[*] Instalando Rust e rust-analyzer
+warning: rust-1:1.92.0-1 is up to date -- skipping
+warning: rust-analyzer-20251208-1 is up to date -- skipping
+ there is nothing to do
+[+] Rust instalado.
+[32m[+][0m install-rust.sh concluído com sucesso.
+
+[34m[*][0m Executando: install-samba.sh
+[*] Instalando samba
+warning: samba-2:4.23.3-2 is up to date -- skipping
+ there is nothing to do
+[+] samba instalado.
+[32m[+][0m install-samba.sh concluído com sucesso.
+
+[34m[*][0m Executando: install-steam.sh
+[*] Instalando Steam
+warning: steam-1.0.0.85-1 is up to date -- skipping
+ there is nothing to do
+[+] Steam instalado.
+[32m[+][0m install-steam.sh concluído com sucesso.
+
+[34m[*][0m Executando: install-stow.sh
+[*] Instalando stow
+warning: stow-2.4.1-1 is up to date -- skipping
+ there is nothing to do
+[+] stow instalado.
+[32m[+][0m install-stow.sh concluído com sucesso.
+
+[34m[*][0m Executando: install-system-update.sh
+[32m[+][0m install-system-update.sh concluído com sucesso.
+
+[34m[*][0m Executando: install-tmux.sh
+Sync Explicit (1): tmux-3.6_a-1
+resolving dependencies...
+looking for conflicting packages...
+:: tmux-3.6_a-1 and tmux-git-10782_3.6a.r64.gabeba491-1 are in conflict. Remove tmux-git? [y/N] error: unresolvable package conflicts detected
+error: failed to prepare transaction (conflicting dependencies)
+
+:: tmux-3.6_a-1 and tmux-git-10782_3.6a.r64.gabeba491-1 are in conflict
+ -> error installing repo packages
+[31m[✗][0m install-tmux.sh falhou, continuando...
+
+[34m[*][0m Executando: install-unzip.sh
+[*] Instalando unzip
+warning: unzip-6.0-23 is up to date -- skipping
+ there is nothing to do
+[+] unzip instalado.
+[32m[+][0m install-unzip.sh concluído com sucesso.
+
+[34m[*][0m Executando: install-vlc.sh
+[*] Instalando vlc
+warning: vlc-3.0.21-32 is up to date -- skipping
+ there is nothing to do
+[+] vlc instalado.
+[32m[+][0m install-vlc.sh concluído com sucesso.
+
+[34m[*][0m Executando: install-vulkan-stack.sh
+[*] Instalando Vulkan stack (ICD loaders, vkd3d, 32-bit libs)
+warning: vulkan-icd-loader-1.4.335.0-1 is up to date -- skipping
+warning: lib32-vulkan-icd-loader-1.4.335.0-1 is up to date -- skipping
+warning: vkd3d-1.18-1 is up to date -- skipping
+warning: lib32-vkd3d-1.18-1 is up to date -- skipping
+ there is nothing to do
+[+] Vulkan stack instalada.
+[32m[+][0m install-vulkan-stack.sh concluído com sucesso.
+
+[34m[*][0m Executando: install-wine-stack.sh
+[*] Instalando Wine e componentes relacionados
+warning: wine-10.20-1 is up to date -- skipping
+warning: winetricks-20250102-1 is up to date -- skipping
+warning: wine-mono-10.3.0-1 is up to date -- skipping
+warning: wine-gecko-2.47.4-2 is up to date -- skipping
+ there is nothing to do
+[+] Wine stack instalada.
+[32m[+][0m install-wine-stack.sh concluído com sucesso.
+
+[34m[*][0m Executando: install-wl-clipboard.sh
+[*] Instalando wl-clipboard
+warning: wl-clipboard-1:2.2.1-3 is up to date -- skipping
+ there is nothing to do
+[+] wl-clipboard instalado.
+[32m[+][0m install-wl-clipboard.sh concluído com sucesso.
+
+[34m[*][0m Executando: install-yay.sh
+[*] Verificando AUR helper (yay)...
+[+] yay encontrado.
+[32m[+][0m install-yay.sh concluído com sucesso.
+
+[34m[*][0m Executando: install-yazi.sh
+[*] Instalando yazi
+warning: yazi-25.5.31-2 is up to date -- skipping
+ there is nothing to do
+[+] yazi instalado.
+[32m[+][0m install-yazi.sh concluído com sucesso.
+
+[34m[*][0m Executando: install-zoxide.sh
+[*] Instalando zoxide
+warning: zoxide-0.9.8-2 is up to date -- skipping
+ there is nothing to do
+[+] zoxide instalado.
+[32m[+][0m install-zoxide.sh concluído com sucesso.
+
+[34m[*][0m Executando: update.sh
+[H[2J[3J=====================================================
+ Manutenção do sistema - Mon Jan  5 11:17:27 AM -03 2026
+ Usuário: bashln
+ Hostname: omarchy
+ Kernel: 6.17.9-arch1-1
+=====================================================
+
+[H[2J[3J[*] Iniciando etapa de mirrors e base...
+[!] pacman-mirrors não encontrado. Pulando atualização de mirrors (ok em Arch puro).
+[*] Atualizando archlinux-keyring...
+warning: archlinux-keyring-20251116-1 is up to date -- skipping
+ there is nothing to do
+[*] Atualizando glibc-locales (com overwrite em /usr/lib/locale/*/*)...
+:: Synchronizing package databases...
+ core downloading...
+ extra downloading...
+ multilib downloading...
+ omarchy downloading...
+error: target not found: /usr/lib/locale/C.utf8/LC_COLLATE
+warning: '/usr/lib/locale/C.utf8/LC_COLLATE' is a file, did you mean -U/--upgrade instead of -S/--sync?
+error: target not found: /usr/lib/locale/C.utf8/LC_CTYPE
+warning: '/usr/lib/locale/C.utf8/LC_CTYPE' is a file, did you mean -U/--upgrade instead of -S/--sync?
+error: target not found: /usr/lib/locale/C.utf8/LC_IDENTIFICATION
+warning: '/usr/lib/locale/C.utf8/LC_IDENTIFICATION' is a file, did you mean -U/--upgrade instead of -S/--sync?
+error: target not found: /usr/lib/locale/C.utf8/LC_MEASUREMENT
+warning: '/usr/lib/locale/C.utf8/LC_MEASUREMENT' is a file, did you mean -U/--upgrade instead of -S/--sync?
+error: target not found: /usr/lib/locale/C.utf8/LC_MESSAGES
+warning: '/usr/lib/locale/C.utf8/LC_MESSAGES' is a file, did you mean -U/--upgrade instead of -S/--sync?
+error: target not found: /usr/lib/locale/C.utf8/LC_MONETARY
+warning: '/usr/lib/locale/C.utf8/LC_MONETARY' is a file, did you mean -U/--upgrade instead of -S/--sync?
+error: target not found: /usr/lib/locale/C.utf8/LC_NAME
+warning: '/usr/lib/locale/C.utf8/LC_NAME' is a file, did you mean -U/--upgrade instead of -S/--sync?
+error: target not found: /usr/lib/locale/C.utf8/LC_NUMERIC
+warning: '/usr/lib/locale/C.utf8/LC_NUMERIC' is a file, did you mean -U/--upgrade instead of -S/--sync?
+error: target not found: /usr/lib/locale/C.utf8/LC_PAPER
+warning: '/usr/lib/locale/C.utf8/LC_PAPER' is a file, did you mean -U/--upgrade instead of -S/--sync?
+error: target not found: /usr/lib/locale/C.utf8/LC_TELEPHONE
+warning: '/usr/lib/locale/C.utf8/LC_TELEPHONE' is a file, did you mean -U/--upgrade instead of -S/--sync?
+error: target not found: /usr/lib/locale/C.utf8/LC_TIME
+warning: '/usr/lib/locale/C.utf8/LC_TIME' is a file, did you mean -U/--upgrade instead of -S/--sync?
+[!] Falha ao atualizar glibc-locales.
+[+] Etapa de mirrors/base finalizada.
+
+[*] Atualizando pacotes oficiais (pacman -Syyu)...
+:: Synchronizing package databases...
+ core downloading...
+ extra downloading...
+ multilib downloading...
+ omarchy downloading...
+:: Starting full system upgrade...
+ there is nothing to do
+[+] Pacotes oficiais atualizados.
+
+[*] Atualizando pacotes do AUR com yay...
+:: Synchronizing package databases...
+ core downloading...
+ extra downloading...
+ multilib downloading...
+ omarchy downloading...
+:: [1mSearching AUR for updates...[0m
+:: [1mSearching databases for updates...[0m
+ -> Packages not in AUR: linuxtoys
+ there is nothing to do
+[+] AUR atualizado com yay.
+
+[!] Flatpak não encontrado. Pulando atualização de Flatpak.
+
+[*] Verificando pacotes órfãos...
+[+] Nenhum pacote órfão encontrado.
+[*] Limpando cache do pacman (pacman -Scc)...
+
+Cache directory: /var/cache/pacman/pkg/
+:: Do you want to remove ALL files from cache? [y/N] 
+
+Database directory: /var/lib/pacman/
+:: Do you want to remove unused repositories? [Y/n] 
+removing unused sync repositories...
+[+] Cache do pacman limpo.
+
+[*] Dicas de limpeza de configs/resíduos:
+  - Verifique arquivos *.pacnew e *.pacsave em /etc
+  - Revise configs antigas em ~/.config e /etc para apps desinstalados
+  - Logs antigos podem acumular em /var/log
+  - Exemplos úteis:
+      find ~ -iname "*<nome_app>*"
+      sudo find /etc -iname "*<nome_app>*"
+      sudo journalctl --vacuum-size=50M
+      sudo journalctl --vacuum-time=7days
+
+[+] Manutenção completa finalizada com sucesso. 🚀
+[32m[+][0m update.sh concluído com sucesso.
+
+[32m[+][0m Todas as etapas concluídas!

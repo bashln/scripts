@@ -1,5 +1,6 @@
 #!/bin/bash
 set -euo pipefail
+REQUIRES_ROOT=1
 
 # Autoconfig EXT4 mounts for dev and 1TB
 # - Monta:  /mnt/dev  (LABEL=dev, ext4)

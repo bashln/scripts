@@ -4,10 +4,10 @@ set -euo pipefail
 SCRIPTS_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
 # Cores para feedback visual
-info()  { printf "\e[34m[*]\e[0m %s\n" "$*"; }
-ok()    { printf "\e[32m[+]\e[0m %s\n" "$*"; }
-warn()  { printf "\e[33m[!]\e[0m %s\n" "$*"; }
-fail()  { printf "\e[31m[✗]\e[0m %s\n" "$*"; }
+info() { printf "\e[34m[*]\e[0m %s\n" "$*"; }
+ok() { printf "\e[32m[+]\e[0m %s\n" "$*"; }
+warn() { printf "\e[33m[!]\e[0m %s\n" "$*"; }
+fail() { printf "\e[31m[✗]\e[0m %s\n" "$*"; }
 
 run_step() {
   local script="$1"
@@ -18,12 +18,30 @@ run_step() {
     return
   fi
 
+  # Detecta se o script requer root
+  local requires_root=0
+  if grep -q '^REQUIRES_ROOT=1' "$path"; then
+    requires_root=1
+  fi
+
   info "Executando: $script"
-  if "$path"; then
+
+  if [[ $requires_root -eq 1 ]]; then
+    if [[ $EUID -eq 0 ]]; then
+      "$path"
+    else
+      sudo "$path"
+    fi
+  else
+    "$path"
+  fi
+
+  if [[ $? -eq 0 ]]; then
     ok "$script concluído com sucesso."
   else
     fail "$script falhou, continuando..."
   fi
+
   echo
 }
 
@@ -51,6 +69,7 @@ main() {
     install-gvfs.sh
     install-hyprland-overrides.sh
     install-jq.sh
+    # install-kitty.sh
     install-lazygit.sh
     install-lib32-libs.sh
     install-libva-utils.sh
@@ -69,10 +88,11 @@ main() {
     install-steam.sh
     install-stow.sh
     install-system-update.sh
-    install-tmux.sh
+    # install-tmux.sh
     install-unzip.sh
+    # install-vivaldi.sh
     install-vlc.sh
-    install-vscode.sh
+    # install-vscode.sh
     install-vulkan-stack.sh
     install-wine-stack.sh
     install-wl-clipboard.sh
@@ -90,4 +110,3 @@ main() {
 }
 
 main "$@"
-
