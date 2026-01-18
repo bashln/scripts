@@ -1,24 +1,23 @@
 #!/bin/bash
 set -euo pipefail
-
-log()  { printf '[*] %s\n' "$*"; }
-ok()   { printf '[+] %s\n' "$*"; }
-warn() { printf '[!] %s\n' "$*"; }
+SCRIPTS_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+source "$SCRIPTS_DIR/lib/utils.sh"
 
 main() {
-  if ! command -v flatpak >/dev/null 2>&1; then
-    warn "Flatpak não encontrado; instale-o antes de configurar o Flathub."
-    return 1
-  fi
+    # 1. Garanta que o binário existe
+    ensure_package "flatpak"
 
-  log "Configurando Flathub como repositório Flatpak..."
-
-  if sudo flatpak remote-add --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo; then
-    ok "Flathub configurado."
-  else
-    warn "Falha ao configurar o Flathub."
-  fi
+    # 2. Adiciona o repositório (Isso falha se o usuário não tiver permissão ou internet)
+    info "Adicionando repositório Flathub..."
+    
+    # O comando remote-add --if-not-exists é seguro para rodar várias vezes
+    # Usamos sudo se for instalação global (system-wide)
+    if sudo flatpak remote-add --if-not-exists flathub https://dl.flathub.org/repo/flathub.flatpakrepo; then
+        ok "Flathub adicionado."
+    else
+        fail "Erro ao adicionar Flathub. Verifique internet ou DNS."
+        exit 1
+    fi
 }
 
 main "$@"
-

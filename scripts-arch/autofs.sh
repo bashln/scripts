@@ -1,38 +1,34 @@
 #!/bin/bash
+# Flag para o install-all.sh saber que precisa de sudo
+REQUIRES_ROOT=1 
+
 set -euo pipefail
-REQUIRES_ROOT=1
+SCRIPTS_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
+# Carrega a biblioteca de logs centralizada
+source "$SCRIPTS_DIR/lib/utils.sh"
+
+# --- Configuração ---
 # Autoconfig EXT4 mounts for dev and 1TB
-# - Monta:  /mnt/dev  (LABEL=dev, ext4)
-#           /mnt/1TB  (LABEL=1TB, ext4)
-# - Idempotente, com backup/rollback do /etc/fstab
-# - Automount via systemd (x-systemd.automount,nofail)
-# - Requer: blkid, lsblk, findmnt, systemctl, mount
+# Monta: /mnt/dev e /mnt/1TB
+# Estratégia: Systemd Automount (On-demand)
 
-# --- helpers de log ---
+# Labels e Dispositivos Candidatos
+LABEL_DEV="${LABEL_DEV:-dev}"
+LABEL_1TB="${LABEL_1TB:-1TB}"
+DEV_DEV_CAND="${DEV_DEV_CAND:-/dev/sda1}"
+DEV_1TB_CAND="${DEV_1TB_CAND:-/dev/sdb2}"
 
-log() {
-  printf '[*] %s\n' "$*"
-}
+# Pontos de montagem
+MP_DEV="/mnt/dev"
+MP_1TB="/mnt/1TB"
 
-ok() {
-  printf '[+] %s\n' "$*"
-}
-
-warn() {
-  printf '[!] %s\n' "$*"
-}
-
+# --- Helpers Locais ---
+# Função die local adaptada para usar o fail da lib
 die() {
-  printf '[X] %s\n' "$*" >&2
+  fail "$*"
   exit 1
 }
-
-# --- checagens iniciais ---
-
-if [[ $EUID -ne 0 ]]; then
-  die "Execute como root (sudo)."
-fi
 
 require_cmd() {
   if ! command -v "$1" >/dev/null 2>&1; then
@@ -40,82 +36,72 @@ require_cmd() {
   fi
 }
 
+# --- Checagens Iniciais ---
+
+# Detecção do usuário real (pois estamos rodando como root via sudo)
+# Se SUDO_USER não existir, assume que logou direto como root (fallback)
+REAL_USER="${SUDO_USER:-$USER}"
+
+if [[ "$REAL_USER" == "root" ]]; then
+    warn "Executando como root puro. Symlinks serão criados em /root/."
+fi
+
+REAL_UID="$(id -u "$REAL_USER")"
+REAL_GID="$(id -g "$REAL_USER")"
+HOME_DIR="$(getent passwd "$REAL_USER" | cut -d: -f6)"
+
+info "Configurando automount para usuário: $REAL_USER ($REAL_UID)"
+
 require_cmd blkid
 require_cmd lsblk
 require_cmd findmnt
 require_cmd systemctl
 require_cmd mount
 
-REAL_USER="${SUDO_USER:-$USER}"
-REAL_UID="$(id -u "$REAL_USER")"
-REAL_GID="$(id -g "$REAL_USER")"
-HOME_DIR="$(getent passwd "$REAL_USER" | cut -d: -f6)"
+# --- Helpers de Disco ---
+dev_by_label() { blkid -t "LABEL=$1" -o device 2>/dev/null | head -n1 || true; }
+uuid_of()      { blkid -s UUID -o value "$1" 2>/dev/null || true; }
+fstype_of()    { lsblk -ndo FSTYPE "$1" 2>/dev/null || true; }
 
-# Labels e fallbacks
-LABEL_DEV="${LABEL_DEV:-dev}"
-LABEL_1TB="${LABEL_1TB:-1TB}"
-DEV_DEV_CAND="${DEV_DEV_CAND:-/dev/sda1}"
-DEV_1TB_CAND="${DEV_1TB_CAND:-/dev/sdb2}"
+# --- Localizar Partições ---
 
-# Pontos de montagem (novo padrão: /mnt/*)
-MP_DEV="/mnt/dev"
-MP_1TB="/mnt/1TB"
-
-# --- helpers de disco ---
-
-dev_by_label() {
-  blkid -t "LABEL=$1" -o device 2>/dev/null | head -n1 || true
-}
-
-uuid_of() {
-  blkid -s UUID -o value "$1" 2>/dev/null || true
-}
-
-fstype_of() {
-  lsblk -ndo FSTYPE "$1" 2>/dev/null || true
-}
-
-# --- localizar partições ---
-
-# DEV (ext4)
+# Processar DEV
 DEV_DEV="$(dev_by_label "$LABEL_DEV")"
 [[ -z "$DEV_DEV" ]] && DEV_DEV="$DEV_DEV_CAND"
 
 [[ -b "$DEV_DEV" ]] || die "Partição 'dev' não encontrada (LABEL=${LABEL_DEV} ou ${DEV_DEV_CAND})."
-[[ "$(fstype_of "$DEV_DEV")" == "ext4" ]] || die "Esperado ext4 em $DEV_DEV (LABEL=${LABEL_DEV})."
-
+[[ "$(fstype_of "$DEV_DEV")" == "ext4" ]] || die "Esperado ext4 em $DEV_DEV."
 UUID_DEV="$(uuid_of "$DEV_DEV")"
-[[ -n "$UUID_DEV" ]] || die "Não foi possível obter UUID de $DEV_DEV."
+[[ -n "$UUID_DEV" ]] || die "Sem UUID para $DEV_DEV."
 
-ok "ext4: $DEV_DEV (UUID=$UUID_DEV) → $MP_DEV"
+info "Detectado 'dev': $DEV_DEV ($UUID_DEV)"
 
-# 1TB (ext4)
+# Processar 1TB
 DEV_1TB="$(dev_by_label "$LABEL_1TB")"
 [[ -z "$DEV_1TB" ]] && DEV_1TB="$DEV_1TB_CAND"
 
 [[ -b "$DEV_1TB" ]] || die "Partição '1TB' não encontrada (LABEL=${LABEL_1TB} ou ${DEV_1TB_CAND})."
-[[ "$(fstype_of "$DEV_1TB")" == "ext4" ]] || die "Esperado ext4 em $DEV_1TB (LABEL=${LABEL_1TB})."
-
+[[ "$(fstype_of "$DEV_1TB")" == "ext4" ]] || die "Esperado ext4 em $DEV_1TB."
 UUID_1TB="$(uuid_of "$DEV_1TB")"
-[[ -n "$UUID_1TB" ]] || die "Não foi possível obter UUID de $DEV_1TB."
+[[ -n "$UUID_1TB" ]] || die "Sem UUID para $DEV_1TB."
 
-ok "ext4: $DEV_1TB (UUID=$UUID_1TB) → $MP_1TB"
+info "Detectado '1TB': $DEV_1TB ($UUID_1TB)"
 
-# --- preparar pontos de montagem ---
+# --- Preparação do Sistema ---
 
+info "Limpando montagens antigas..."
 mkdir -p "$MP_DEV" "$MP_1TB"
 
-# Encerrar automounts/monstagens anteriores (se existirem)
+# Systemctl stop silenciado
 systemctl stop mnt-dev.automount mnt-dev.mount 2>/dev/null || true
 systemctl stop mnt-1TB.automount mnt-1TB.mount 2>/dev/null || true
 
 umount -l "$MP_DEV" 2>/dev/null || true
 umount -l "$MP_1TB" 2>/dev/null || true
 
-# --- construir linhas do fstab ---
+# --- Manipulação do FSTAB ---
 
 EXT4_OPTS="defaults,noatime,x-systemd.automount,nofail"
-
 FSTAB_LINE_DEV="UUID=${UUID_DEV} ${MP_DEV} ext4 ${EXT4_OPTS} 0 2"
 FSTAB_LINE_1TB="UUID=${UUID_1TB} ${MP_1TB} ext4 ${EXT4_OPTS} 0 2"
 
@@ -125,17 +111,19 @@ BACKUP="/etc/fstab.bak-${TS}"
 TMP="$(mktemp)"
 
 cp -a "$FSTAB" "$BACKUP"
-ok "Backup criado: $BACKUP"
+info "Backup do fstab criado: $BACKUP"
 
-# Remover entradas antigas dessas unidades/pontos
+# AWK Magic: Remove referências antigas aos UUIDs ou Mountpoints
 awk -v uuid1="$UUID_DEV" -v uuid2="$UUID_1TB" -v mp1="$MP_DEV" -v mp2="$MP_1TB" '
 BEGIN { IGNORECASE = 1 }
 {
+  # Se a linha contém o UUID ou o Mount Point, pula (deleta)
   if ($0 ~ uuid1 || $0 ~ uuid2 || $2 == mp1 || $2 == mp2) next;
   print $0
 }
 ' "$FSTAB" >"$TMP"
 
+# Adiciona as novas linhas
 {
   echo ""
   echo "# >>> auto-added by autofs-arch-ext4 (${TS})"
@@ -144,35 +132,40 @@ BEGIN { IGNORECASE = 1 }
   echo "# <<<"
 } >>"$TMP"
 
-# --- validar e aplicar novo fstab ---
+# --- Validação e Aplicação ---
 
-if ! findmnt --verify -F "$TMP"; then
-  mv -f "$BACKUP" "$FSTAB"
+info "Verificando integridade do novo fstab..."
+if ! findmnt --verify -F "$TMP" >> "$LOG_FILE" 2>&1; then
   rm -f "$TMP"
-  die "findmnt --verify falhou; rollback do fstab aplicado."
+  die "findmnt --verify falhou. O fstab original foi mantido intacto."
 fi
 
+# Commit
 mv -f "$TMP" "$FSTAB"
 systemctl daemon-reload
 
-# --- montar tudo e testar ---
+# --- Teste de Montagem ---
 
-if ! mount -a; then
-  warn "mount -a falhou; restaurando backup de $FSTAB."
+info "Testando montagem (mount -a)..."
+if ! mount -a >> "$LOG_FILE" 2>&1; then
+  warn "mount -a falhou! Restaurando backup..."
   cp -af "$BACKUP" "$FSTAB"
   systemctl daemon-reload
-  die "Erro ao montar partições; rollback aplicado."
+  die "Erro crítico ao montar. Rollback aplicado com sucesso."
 fi
 
-# Forçar criação de unidades automount lendo diretórios
+# Trigger do automount
 ls "$MP_DEV" >/dev/null 2>&1 || true
 ls "$MP_1TB" >/dev/null 2>&1 || true
 
-# --- symlinks amigáveis no $HOME ---
+# --- Symlinks na Home ---
 
+info "Atualizando symlinks em $HOME_DIR..."
 ln -sfn "$MP_DEV" "$HOME_DIR/dev"
 ln -sfn "$MP_1TB" "$HOME_DIR/1TB"
+
+# Correção de permissão crítica: O symlink foi criado pelo root, 
+# precisamos garantir que o dono seja o usuário.
 chown -h "$REAL_UID:$REAL_GID" "$HOME_DIR/dev" "$HOME_DIR/1TB"
 
-ok "fstab atualizado (ext4/ext4). Automount pronto."
-ok "Acesse via: ~/dev e ~/1TB."
+ok "Configuração de disco concluída. Acesso em ~/dev e ~/1TB"

@@ -1,6 +1,8 @@
 
 #!/bin/bash
 set -euo pipefail
+SCRIPTS_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+source "$SCRIPTS_DIR/lib/utils.sh"
 
 # =============================================================================
 # Modelo padrão de script de instalação/configuração
@@ -17,7 +19,7 @@ fail()  { printf "\e[31m[✗]\e[0m %s\n" "$*"; }
 
 # --- Funções auxiliares ------------------------------------------------------
 # Exemplo: verifica se um pacote já está instalado antes de instalar
-install_pkg() {
+ensure_package() {
   local pkg="$1"
   if pacman -Qi "$pkg" &>/dev/null; then
     ok "Pacote '$pkg' já está instalado."
@@ -36,8 +38,8 @@ main() {
   info "Iniciando script $(basename "$0")"
 
   # Exemplo de uso:
-  # install_pkg curl
-  # install_pkg git
+  # ensure_package curl
+  # ensure_package git
   # curl -fsSL https://example.com/script.sh | bash
 
   ok "Script $(basename "$0") concluído com sucesso!"

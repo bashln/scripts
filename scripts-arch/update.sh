@@ -1,5 +1,7 @@
 #!/bin/bash
 set -euo pipefail
+SCRIPTS_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+source "$SCRIPTS_DIR/lib/utils.sh"
 
 # Manutenção completa do sistema (Arch/derivados)
 # - Atualiza mirrors (se pacman-mirrors existir)

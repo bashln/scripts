@@ -1,0 +1,203 @@
+[2026-01-18 14:44:54] [INFO] Iniciando instalação. Log completo em: /home/bashln/bashln/bashln-scripts/scripts-arch/install.log
+[2026-01-18 14:44:54] [INFO] >>> Executando módulo: autofs.sh
+[2026-01-18 14:44:54] [INFO] Configurando automount para usuário: bashln (1000)
+[2026-01-18 14:44:54] [INFO] Detectado 'dev': /dev/sda1 (fa8ed2ca-6800-44ac-951b-99c63ea40aaa)
+[2026-01-18 14:44:54] [INFO] Detectado '1TB': /dev/sdb1 (e335a2ed-868f-4f00-90f8-ca517bad8ced)
+[2026-01-18 14:44:54] [INFO] Limpando montagens antigas...
+[2026-01-18 14:44:56] [FAIL] Módulo autofs.sh FALHOU.
+[2026-01-18 14:44:56] [INFO] >>> Executando módulo: install-curl.sh
+[2026-01-18 14:44:56] [OK] Módulo install-curl.sh finalizado com sucesso.
+[2026-01-18 14:44:56] [WARN] Verifique o arquivo /home/bashln/bashln/bashln-scripts/scripts-arch/install.log e procure por 'FAIL' ou erros do pacman.
+[2026-01-18 14:55:07] [INFO] Iniciando instalação. Log completo em: /home/bashln/bashln/bashln-scripts/scripts-arch/install.log
+[2026-01-18 14:55:07] [INFO] >>> Executando módulo: configure-git.sh
+[2026-01-18 14:55:07] [OK] Módulo configure-git.sh finalizado com sucesso.
+[2026-01-18 14:55:07] [INFO] >>> Executando módulo: fix-services.sh
+[2026-01-18 14:55:08] [OK] Módulo fix-services.sh finalizado com sucesso.
+[2026-01-18 14:55:08] [INFO] >>> Executando módulo: install-stow.sh
+[2026-01-18 14:55:08] [OK] Módulo install-stow.sh finalizado com sucesso.
+[2026-01-18 14:55:08] [INFO] >>> Executando módulo: install-alacritty.sh
+[2026-01-18 14:55:08] [OK] Módulo install-alacritty.sh finalizado com sucesso.
+[2026-01-18 14:55:08] [INFO] >>> Executando módulo: install-asdf.sh
+[2026-01-18 14:55:08] [OK] Módulo install-asdf.sh finalizado com sucesso.
+[2026-01-18 14:55:08] [INFO] >>> Executando módulo: install-base-devel.sh
+[2026-01-18 14:55:08] [OK] Módulo install-base-devel.sh finalizado com sucesso.
+[2026-01-18 14:55:08] [INFO] >>> Executando módulo: install-cmake.sh
+[2026-01-18 14:55:08] [OK] Módulo install-cmake.sh finalizado com sucesso.
+[2026-01-18 14:55:08] [INFO] >>> Executando módulo: install-curl.sh
+[2026-01-18 14:55:08] [OK] Módulo install-curl.sh finalizado com sucesso.
+[2026-01-18 14:55:08] [INFO] >>> Executando módulo: install-dotfiles.sh
+[2026-01-18 14:55:08] [FAIL] Módulo install-dotfiles.sh FALHOU.
+[2026-01-18 14:55:08] [INFO] >>> Executando módulo: install-emacs.sh
+[2026-01-18 14:55:09] [OK] Módulo install-emacs.sh finalizado com sucesso.
+[2026-01-18 14:55:09] [INFO] >>> Executando módulo: install-eza.sh
+[2026-01-18 14:55:09] [OK] Módulo install-eza.sh finalizado com sucesso.
+[2026-01-18 14:55:09] [INFO] >>> Executando módulo: install-flatpak-flathub.sh
+[2026-01-18 14:55:09] [FAIL] Módulo install-flatpak-flathub.sh FALHOU.
+[2026-01-18 14:55:09] [INFO] >>> Executando módulo: install-flatpak-pupgui2.sh
+[2026-01-18 14:55:09] [FAIL] Módulo install-flatpak-pupgui2.sh FALHOU.
+[2026-01-18 14:55:09] [INFO] >>> Executando módulo: install-flatpak-spotify.sh
+[2026-01-18 14:55:09] [FAIL] Módulo install-flatpak-spotify.sh FALHOU.
+[2026-01-18 14:55:09] [INFO] >>> Executando módulo: install-fonts.sh
+[2026-01-18 14:55:09] [OK] Módulo install-fonts.sh finalizado com sucesso.
+[2026-01-18 14:55:09] [INFO] >>> Executando módulo: install-git.sh
+[2026-01-18 14:55:09] [OK] Módulo install-git.sh finalizado com sucesso.
+[2026-01-18 14:55:09] [INFO] >>> Executando módulo: install-go-tools.sh
+[2026-01-18 14:55:10] [OK] Módulo install-go-tools.sh finalizado com sucesso.
+[2026-01-18 14:55:10] [INFO] >>> Executando módulo: install-gvfs.sh
+[2026-01-18 14:55:11] [OK] Módulo install-gvfs.sh finalizado com sucesso.
+[2026-01-18 14:55:11] [INFO] >>> Executando módulo: install-hyprland-overrides.sh
+[2026-01-18 14:55:11] [OK] Módulo install-hyprland-overrides.sh finalizado com sucesso.
+[2026-01-18 14:55:11] [INFO] >>> Executando módulo: install-jq.sh
+[2026-01-18 14:55:11] [OK] Módulo install-jq.sh finalizado com sucesso.
+[2026-01-18 14:55:11] [INFO] >>> Executando módulo: install-lazygit.sh
+[2026-01-18 14:55:11] [OK] Módulo install-lazygit.sh finalizado com sucesso.
+[2026-01-18 14:55:11] [INFO] >>> Executando módulo: install-lib32-libs.sh
+[2026-01-18 14:55:11] [OK] Módulo install-lib32-libs.sh finalizado com sucesso.
+[2026-01-18 14:55:11] [INFO] >>> Executando módulo: install-libva-utils.sh
+[2026-01-18 14:55:11] [OK] Módulo install-libva-utils.sh finalizado com sucesso.
+[2026-01-18 14:55:11] [INFO] >>> Executando módulo: install-linux-toys.sh
+[2026-01-18 14:55:15] [OK] Módulo install-linux-toys.sh finalizado com sucesso.
+[2026-01-18 14:55:15] [INFO] >>> Executando módulo: install-mesa-radeon.sh
+[2026-01-18 14:55:15] [OK] Módulo install-mesa-radeon.sh finalizado com sucesso.
+[2026-01-18 14:55:15] [INFO] >>> Executando módulo: install-nodejs.sh
+[2026-01-18 14:55:15] [OK] Módulo install-nodejs.sh finalizado com sucesso.
+[2026-01-18 14:55:15] [INFO] >>> Executando módulo: install-npm-global.sh
+[2026-01-18 14:55:16] [OK] Módulo install-npm-global.sh finalizado com sucesso.
+[2026-01-18 14:55:16] [INFO] >>> Executando módulo: install-ntfs-3g.sh
+[2026-01-18 14:55:16] [OK] Módulo install-ntfs-3g.sh finalizado com sucesso.
+[2026-01-18 14:55:16] [INFO] >>> Executando módulo: install-ohmybash-starship.sh
+[2026-01-18 14:55:16] [OK] Módulo install-ohmybash-starship.sh finalizado com sucesso.
+[2026-01-18 14:55:16] [INFO] >>> Executando módulo: install-postgresql.sh
+[2026-01-18 14:55:18] [OK] Módulo install-postgresql.sh finalizado com sucesso.
+[2026-01-18 14:55:18] [INFO] >>> Executando módulo: install-python-tools.sh
+[2026-01-18 14:55:18] [OK] Módulo install-python-tools.sh finalizado com sucesso.
+[2026-01-18 14:55:18] [INFO] >>> Executando módulo: install-python.sh
+[2026-01-18 14:55:19] [OK] Módulo install-python.sh finalizado com sucesso.
+[2026-01-18 14:55:19] [INFO] >>> Executando módulo: install-ruby.sh
+[2026-01-18 14:55:19] [FAIL] Módulo install-ruby.sh FALHOU.
+[2026-01-18 14:55:19] [INFO] >>> Executando módulo: install-rust.sh
+[2026-01-18 14:55:19] [OK] Módulo install-rust.sh finalizado com sucesso.
+[2026-01-18 14:55:19] [INFO] >>> Executando módulo: install-samba.sh
+[2026-01-18 14:55:19] [OK] Módulo install-samba.sh finalizado com sucesso.
+[2026-01-18 14:55:19] [INFO] >>> Executando módulo: install-steam.sh
+[2026-01-18 14:55:19] [OK] Módulo install-steam.sh finalizado com sucesso.
+[2026-01-18 14:55:19] [INFO] >>> Executando módulo: install-system-update.sh
+[2026-01-18 14:55:19] [OK] Módulo install-system-update.sh finalizado com sucesso.
+[2026-01-18 14:55:19] [INFO] >>> Executando módulo: install-unzip.sh
+[2026-01-18 14:55:19] [OK] Módulo install-unzip.sh finalizado com sucesso.
+[2026-01-18 14:55:19] [INFO] >>> Executando módulo: install-vivaldi.sh
+[2026-01-18 14:55:19] [OK] Módulo install-vivaldi.sh finalizado com sucesso.
+[2026-01-18 14:55:19] [INFO] >>> Executando módulo: install-vlc.sh
+[2026-01-18 14:55:20] [OK] Módulo install-vlc.sh finalizado com sucesso.
+[2026-01-18 14:55:20] [INFO] >>> Executando módulo: install-vulkan-stack.sh
+[2026-01-18 14:55:20] [OK] Módulo install-vulkan-stack.sh finalizado com sucesso.
+[2026-01-18 14:55:20] [INFO] >>> Executando módulo: install-wine-stack.sh
+[2026-01-18 14:55:20] [OK] Módulo install-wine-stack.sh finalizado com sucesso.
+[2026-01-18 14:55:20] [INFO] >>> Executando módulo: install-wl-clipboard.sh
+[2026-01-18 14:55:20] [OK] Módulo install-wl-clipboard.sh finalizado com sucesso.
+[2026-01-18 14:55:20] [INFO] >>> Executando módulo: install-yay.sh
+[2026-01-18 14:55:20] [OK] Módulo install-yay.sh finalizado com sucesso.
+[2026-01-18 14:55:20] [INFO] >>> Executando módulo: install-yazi.sh
+[2026-01-18 14:55:20] [OK] Módulo install-yazi.sh finalizado com sucesso.
+[2026-01-18 14:55:20] [INFO] >>> Executando módulo: install-zoxide.sh
+[2026-01-18 14:55:21] [OK] Módulo install-zoxide.sh finalizado com sucesso.
+[2026-01-18 14:55:21] [INFO] >>> Executando módulo: update.sh
+[2026-01-18 14:55:26] [OK] Módulo update.sh finalizado com sucesso.
+[2026-01-18 14:55:26] [WARN] Verifique o arquivo /home/bashln/bashln/bashln-scripts/scripts-arch/install.log.
+[2026-01-18 17:59:56] [INFO] Iniciando instalação. Log completo em: /home/bashln/bashln/bashln-scripts/scripts-arch/install.log
+[2026-01-18 17:59:58] [INFO] >>> Executando módulo: configure-git.sh
+[2026-01-18 17:59:58] [OK] Módulo configure-git.sh finalizado com sucesso.
+[2026-01-18 17:59:58] [INFO] >>> Executando módulo: fix-services.sh
+[2026-01-18 17:59:59] [OK] Módulo fix-services.sh finalizado com sucesso.
+[2026-01-18 17:59:59] [INFO] >>> Executando módulo: install-stow.sh
+[2026-01-18 17:59:59] [OK] Módulo install-stow.sh finalizado com sucesso.
+[2026-01-18 17:59:59] [INFO] >>> Executando módulo: install-alacritty.sh
+[2026-01-18 17:59:59] [OK] Módulo install-alacritty.sh finalizado com sucesso.
+[2026-01-18 17:59:59] [INFO] >>> Executando módulo: install-asdf.sh
+[2026-01-18 17:59:59] [OK] Módulo install-asdf.sh finalizado com sucesso.
+[2026-01-18 17:59:59] [INFO] >>> Executando módulo: install-base-devel.sh
+[2026-01-18 17:59:59] [OK] Módulo install-base-devel.sh finalizado com sucesso.
+[2026-01-18 17:59:59] [INFO] >>> Executando módulo: install-cmake.sh
+[2026-01-18 17:59:59] [OK] Módulo install-cmake.sh finalizado com sucesso.
+[2026-01-18 17:59:59] [INFO] >>> Executando módulo: install-curl.sh
+[2026-01-18 18:00:00] [OK] Módulo install-curl.sh finalizado com sucesso.
+[2026-01-18 18:00:00] [INFO] >>> Executando módulo: install-dotfiles.sh
+[2026-01-18 18:00:00] [OK] Módulo install-dotfiles.sh finalizado com sucesso.
+[2026-01-18 18:00:00] [INFO] >>> Executando módulo: install-emacs.sh
+[2026-01-18 18:00:00] [OK] Módulo install-emacs.sh finalizado com sucesso.
+[2026-01-18 18:00:00] [INFO] >>> Executando módulo: install-eza.sh
+[2026-01-18 18:00:01] [OK] Módulo install-eza.sh finalizado com sucesso.
+[2026-01-18 18:00:01] [INFO] >>> Executando módulo: install-flatpak-flathub.sh
+[2026-01-18 18:00:01] [INFO] Pacote 'flatpak' já instalado. Pulando.
+[2026-01-18 18:00:01] [INFO] Adicionando repositório Flathub...
+[2026-01-18 18:00:01] [OK] Flathub adicionado.
+[2026-01-18 18:00:01] [OK] Módulo install-flatpak-flathub.sh finalizado com sucesso.
+[2026-01-18 18:00:01] [INFO] >>> Executando módulo: install-flatpak-pupgui2.sh
+[2026-01-18 18:00:30] [OK] Módulo install-flatpak-pupgui2.sh finalizado com sucesso.
+[2026-01-18 18:00:30] [INFO] >>> Executando módulo: install-flatpak-spotify.sh
+[2026-01-18 18:00:53] [OK] Módulo install-flatpak-spotify.sh finalizado com sucesso.
+[2026-01-18 18:00:53] [INFO] >>> Executando módulo: install-fonts.sh
+[2026-01-18 18:00:56] [OK] Módulo install-fonts.sh finalizado com sucesso.
+[2026-01-18 18:00:56] [INFO] >>> Executando módulo: install-git.sh
+[2026-01-18 18:00:56] [OK] Módulo install-git.sh finalizado com sucesso.
+[2026-01-18 18:00:56] [INFO] >>> Executando módulo: install-go-tools.sh
+[2026-01-18 18:00:57] [OK] Módulo install-go-tools.sh finalizado com sucesso.
+[2026-01-18 18:00:57] [INFO] >>> Executando módulo: install-gvfs.sh
+[2026-01-18 18:00:58] [OK] Módulo install-gvfs.sh finalizado com sucesso.
+[2026-01-18 18:00:58] [INFO] >>> Executando módulo: install-hyprland-overrides.sh
+[2026-01-18 18:00:58] [OK] Módulo install-hyprland-overrides.sh finalizado com sucesso.
+[2026-01-18 18:00:58] [INFO] >>> Executando módulo: install-jq.sh
+[2026-01-18 18:00:58] [OK] Módulo install-jq.sh finalizado com sucesso.
+[2026-01-18 18:00:58] [INFO] >>> Executando módulo: install-lazygit.sh
+[2026-01-18 18:00:58] [OK] Módulo install-lazygit.sh finalizado com sucesso.
+[2026-01-18 18:00:58] [INFO] >>> Executando módulo: install-lib32-libs.sh
+[2026-01-18 18:00:58] [OK] Módulo install-lib32-libs.sh finalizado com sucesso.
+[2026-01-18 18:00:58] [INFO] >>> Executando módulo: install-libva-utils.sh
+[2026-01-18 18:00:59] [OK] Módulo install-libva-utils.sh finalizado com sucesso.
+[2026-01-18 18:00:59] [INFO] >>> Executando módulo: install-mesa-radeon.sh
+[2026-01-18 18:00:59] [OK] Módulo install-mesa-radeon.sh finalizado com sucesso.
+[2026-01-18 18:00:59] [INFO] >>> Executando módulo: install-nodejs.sh
+[2026-01-18 18:00:59] [OK] Módulo install-nodejs.sh finalizado com sucesso.
+[2026-01-18 18:00:59] [INFO] >>> Executando módulo: install-npm-global.sh
+[2026-01-18 18:01:07] [OK] Módulo install-npm-global.sh finalizado com sucesso.
+[2026-01-18 18:01:07] [INFO] >>> Executando módulo: install-ntfs-3g.sh
+[2026-01-18 18:01:07] [OK] Módulo install-ntfs-3g.sh finalizado com sucesso.
+[2026-01-18 18:01:07] [INFO] >>> Executando módulo: install-ohmybash-starship.sh
+[2026-01-18 18:01:07] [OK] Módulo install-ohmybash-starship.sh finalizado com sucesso.
+[2026-01-18 18:01:07] [INFO] >>> Executando módulo: install-postgresql.sh
+[2026-01-18 18:01:09] [OK] Módulo install-postgresql.sh finalizado com sucesso.
+[2026-01-18 18:01:09] [INFO] >>> Executando módulo: install-python-tools.sh
+[2026-01-18 18:01:10] [OK] Módulo install-python-tools.sh finalizado com sucesso.
+[2026-01-18 18:01:10] [INFO] >>> Executando módulo: install-python.sh
+[2026-01-18 18:01:10] [OK] Módulo install-python.sh finalizado com sucesso.
+[2026-01-18 18:01:10] [INFO] >>> Executando módulo: install-ruby.sh
+[2026-01-18 18:01:10] [FAIL] Módulo install-ruby.sh FALHOU.
+[2026-01-18 18:01:10] [INFO] >>> Executando módulo: install-rust.sh
+[2026-01-18 18:01:10] [OK] Módulo install-rust.sh finalizado com sucesso.
+[2026-01-18 18:01:10] [INFO] >>> Executando módulo: install-samba.sh
+[2026-01-18 18:01:10] [OK] Módulo install-samba.sh finalizado com sucesso.
+[2026-01-18 18:01:10] [INFO] >>> Executando módulo: install-steam.sh
+[2026-01-18 18:01:10] [OK] Módulo install-steam.sh finalizado com sucesso.
+[2026-01-18 18:01:10] [INFO] >>> Executando módulo: install-system-update.sh
+[2026-01-18 18:01:10] [OK] Módulo install-system-update.sh finalizado com sucesso.
+[2026-01-18 18:01:10] [INFO] >>> Executando módulo: install-unzip.sh
+[2026-01-18 18:01:11] [OK] Módulo install-unzip.sh finalizado com sucesso.
+[2026-01-18 18:01:11] [INFO] >>> Executando módulo: install-vivaldi.sh
+[2026-01-18 18:01:11] [OK] Módulo install-vivaldi.sh finalizado com sucesso.
+[2026-01-18 18:01:11] [INFO] >>> Executando módulo: install-vlc.sh
+[2026-01-18 18:01:11] [OK] Módulo install-vlc.sh finalizado com sucesso.
+[2026-01-18 18:01:11] [INFO] >>> Executando módulo: install-vulkan-stack.sh
+[2026-01-18 18:01:11] [OK] Módulo install-vulkan-stack.sh finalizado com sucesso.
+[2026-01-18 18:01:11] [INFO] >>> Executando módulo: install-wine-stack.sh
+[2026-01-18 18:01:11] [OK] Módulo install-wine-stack.sh finalizado com sucesso.
+[2026-01-18 18:01:11] [INFO] >>> Executando módulo: install-wl-clipboard.sh
+[2026-01-18 18:01:12] [OK] Módulo install-wl-clipboard.sh finalizado com sucesso.
+[2026-01-18 18:01:12] [INFO] >>> Executando módulo: install-yay.sh
+[2026-01-18 18:01:12] [OK] Módulo install-yay.sh finalizado com sucesso.
+[2026-01-18 18:01:12] [INFO] >>> Executando módulo: install-yazi.sh
+[2026-01-18 18:01:12] [OK] Módulo install-yazi.sh finalizado com sucesso.
+[2026-01-18 18:01:12] [INFO] >>> Executando módulo: install-zoxide.sh
+[2026-01-18 18:01:12] [OK] Módulo install-zoxide.sh finalizado com sucesso.
+[2026-01-18 18:01:12] [INFO] >>> Executando módulo: update.sh
+[2026-01-18 18:01:28] [OK] Módulo update.sh finalizado com sucesso.
+[2026-01-18 18:01:28] [WARN] Verifique o arquivo /home/bashln/bashln/bashln-scripts/scripts-arch/install.log.
