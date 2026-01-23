@@ -19,7 +19,7 @@ while true; do sudo -n true; sleep 60; kill -0 "$$" || exit; done 2>/dev/null &
 
 run_step() {
     local script="$1"
-    local path="$BASE_DIR/$script"
+    local path="$BASE_DIR/assets/$script"
 
     if [[ ! -x "$path" ]]; then
         warn "Script ignorado (não executável): $script"
@@ -64,7 +64,7 @@ run_step() {
 }
 
 STEPS=(
-    #"autofs.sh""
+    "autofs.sh"
     "configure-git.sh"
     "fix-services.sh"
     "install-stow.sh"
@@ -80,22 +80,23 @@ STEPS=(
     "install-flatpak-pupgui2.sh"
     "install-flatpak-spotify.sh"
     "install-fonts.sh"
-    # "install-ghostty.sh"
+    "install-ghostty.sh"
     "install-git.sh"
     "install-go-tools.sh"
     "install-gvfs.sh"
     "install-hyprland-overrides.sh"
     "install-jq.sh"
-    # "install-kitty.sh"
+    "install-kitty.sh"
     "install-lazygit.sh"
     "install-lib32-libs.sh"
     "install-libva-utils.sh"
-    # "install-linux-toys.sh"
+    "install-linux-toys.sh"
+    "install-lsps.sh"
     "install-mesa-radeon.sh"
     "install-nodejs.sh"
     "install-npm-global.sh"
     "install-ntfs-3g.sh"
-    # "install-ohmybash-starship.sh"
+    "install-ohmybash-starship.sh"
     "install-postgresql.sh"
     "install-python-tools.sh"
     "install-python.sh"
@@ -103,20 +104,19 @@ STEPS=(
     "install-rust.sh"
     "install-samba.sh"
     "install-steam.sh"
-    "install-system-update.sh"
-    # "install-tmux.sh"
+    "install-tmux.sh"
     "install-unzip.sh"
     "install-vivaldi.sh"
     "install-vlc.sh"
-    # "install-vscode.sh"
+    "install-vscode.sh"
     "install-vulkan-stack.sh"
     "install-wine-stack.sh"
     "install-wl-clipboard.sh"
     "install-yay.sh"
     "install-yazi.sh"
     "install-zoxide.sh"
-    "update.sh"
-    # ... adicione seus scripts aqui
+    "install-zsh-env.sh"
+    "set-shell.sh"
 )
 
 for step in "${STEPS[@]}"; do

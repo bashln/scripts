@@ -30,6 +30,10 @@ info() { _log "INFO" "$BLUE" "$*"; }
 ok()   { _log "OK"   "$GREEN" "$*"; }
 warn() { _log "WARN" "$YELLOW" "$*"; }
 fail() { _log "FAIL" "$RED" "$*"; }
+die() {
+    fail "$*"
+    exit 1
+}
 
 # --- Função de Verificação de Pacotes (Agnóstica/Arch) ---
 # Verifica se está instalado antes de chamar o pacman (Economiza tempo/Performance)
@@ -47,6 +51,40 @@ ensure_package() {
         ok "Pacote '$pkg' instalado."
     else
         fail "Erro ao instalar '$pkg'. Verifique o log: $LOG_FILE"
+        return 1
+    fi
+}
+
+ensure_aur_package() {
+    local pkg="$1"
+    
+    if yay -Qi "$pkg" &>/dev/null; then
+        info "Pacote AUR '$pkg' já instalado. Pulando."
+        return 0
+    fi
+
+    info "Instalando pacote AUR: $pkg..."
+    if yay -S --noconfirm --needed "$pkg" >> "$LOG_FILE" 2>&1; then
+        ok "Pacote AUR '$pkg' instalado."
+    else
+        fail "Erro ao instalar o pacote AUR '$pkg'. Verifique o log: $LOG_FILE"
+        return 1
+    fi
+}
+
+ensure_flatpak_package() {
+    local pkg="$1"
+    
+    if flatpak info "$pkg" &>/dev/null; then
+        info "Pacote Flatpak '$pkg' já instalado. Pulando."
+        return 0
+    fi
+
+    info "Instalando pacote Flatpak: $pkg..."
+    if flatpak install -y flathub "$pkg" >> "$LOG_FILE" 2>&1; then
+        ok "Pacote Flatpak '$pkg' instalado."
+    else
+        fail "Erro ao instalar o pacote Flatpak '$pkg'. Verifique o log: $LOG_FILE"
         return 1
     fi
 }

@@ -1,191 +1,176 @@
 #!/bin/bash
+# ==============================================================================
+# SYSADMIN UPDATE SCRIPT - UNIVERSAL ARCH WAY
+# Foco: Estabilidade, Rollback seguro e Detecção automática de Distro.
+# ==============================================================================
+
 set -euo pipefail
-SCRIPTS_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-source "$SCRIPTS_DIR/lib/utils.sh"
 
-# Manutenção completa do sistema (Arch/derivados)
-# - Atualiza mirrors (se pacman-mirrors existir)
-# - Ajusta keyring e remove alguns pacotes específicos
-# - Atualiza pacotes oficiais (pacman)
-# - Atualiza AUR (yay ou paru, se existirem)
-# - Atualiza Flatpak (se existir)
-# - Limpa órfãos e cache do pacman
-# - Dá dicas sobre configs/resíduos
+# --- Configurações ---
+KEEP_CACHE_VERSIONS=3 # Mantém as 3 últimas versões de cada pacote (Rollback seguro)
+LOG_FILE="/var/log/sys_update.log"
 
-# --- helpers de log ---
-
+# --- Helpers de Log (Estilo SysAdmin) ---
 log() {
-  printf '[*] %s\n' "$*"
+  local msg="[$(date +'%H:%M:%S')] [*] $1"
+  echo "$msg"
+  # Opcional: descomente para salvar em arquivo (requer permissão de escrita)
+  # echo "$msg" >> "$LOG_FILE"
 }
 
 ok() {
-  printf '[+] %s\n' "$*"
+  echo -e "\033[32m[+] $1\033[0m"
 }
 
 warn() {
-  printf '[!] %s\n' "$*"
+  echo -e "\033[33m[!] ALERTA: $1\033[0m"
 }
 
 die() {
-  printf '[X] %s\n' "$*" >&2
+  echo -e "\033[31m[X] ERRO CRÍTICO: $1\033[0m" >&2
   exit 1
 }
 
-# --- checagens básicas ---
-
-require_cmd() {
-  if ! command -v "$1" >/dev/null 2>&1; then
-    die "Comando requerido não encontrado: $1"
-  fi
-}
-
-require_cmd pacman
-
-# Se rodar como root, não usa sudo
+# --- Verificação de Privilégios ---
 if [[ $EUID -eq 0 ]]; then
   SUDO=""
 else
   SUDO="sudo"
-  require_cmd sudo
+  if ! command -v sudo >/dev/null 2>&1; then
+    die "Este script requer root ou sudo."
+  fi
 fi
 
-# --- funções de manutenção ---
+# --- Funções Core ---
 
-update_mirrors_and_base() {
-  clear || true
-  sleep 1
-
-  log "Iniciando etapa de mirrors e base..."
-
-  if command -v pacman-mirrors >/dev/null 2>&1; then
-    log "Atualizando mirrors (pacman-mirrors --fasttrack 20)..."
-    $SUDO pacman-mirrors --fasttrack 20 || warn "Falha ao atualizar mirrors com pacman-mirrors."
-  else
-    warn "pacman-mirrors não encontrado. Pulando atualização de mirrors (ok em Arch puro)."
+check_internet() {
+  log "Verificando conectividade..."
+  if ! ping -c 1 8.8.8.8 >/dev/null 2>&1; then
+    die "Sem conexão com a internet. Abortando."
   fi
-
-  log "Atualizando archlinux-keyring..."
-  $SUDO pacman -S archlinux-keyring --noconfirm --needed || warn "Falha ao atualizar archlinux-keyring."
-
-  # Remoção de pacotes específicos, se instalados
-  if pacman -Qi gedit >/dev/null 2>&1; then
-    log "Removendo gedit..."
-    $SUDO pacman -Rns gedit --noconfirm || warn "Falha ao remover gedit."
-  fi
-
-  if pacman -Qi webkit2gtk-5.0 >/dev/null 2>&1; then
-    log "Removendo webkit2gtk-5.0 (Rdd)..."
-    $SUDO pacman -Rdd webkit2gtk-5.0 --noconfirm || warn "Falha ao remover webkit2gtk-5.0."
-  fi
-
-  ok "Etapa de mirrors/base finalizada."
-  printf '\n'
 }
 
-update_pacman() {
-  log "Atualizando pacotes oficiais (pacman -Syyu)..."
-  if ! $SUDO pacman -Syyu --noconfirm; then
-    die "Erro ao atualizar pacotes oficiais (pacman)."
+update_mirrors() {
+  log "Detectando ferramenta de mirrors..."
+
+  # Lógica agnóstica para CachyOS, Manjaro e Arch Puro
+  if command -v cachyos-rate-mirrors >/dev/null 2>&1; then
+    log "Ambiente CachyOS detectado."
+    $SUDO cachyos-rate-mirrors || warn "Falha ao classificar mirrors CachyOS."
+
+  elif command -v pacman-mirrors >/dev/null 2>&1; then
+    log "Ambiente Manjaro detectado."
+    $SUDO pacman-mirrors --fasttrack 10 || warn "Falha ao classificar mirrors Manjaro."
+
+  elif command -v reflector >/dev/null 2>&1; then
+    log "Ambiente Arch/Endeavour (Reflector) detectado."
+    $SUDO reflector --latest 10 --protocol https --sort rate --save /etc/pacman.d/mirrorlist || warn "Falha no Reflector."
+
+  else
+    warn "Nenhuma ferramenta de otimização de mirrors encontrada (reflector/pacman-mirrors). Pulando."
+  fi
+}
+
+update_keyrings() {
+  log "Atualizando chaveiros de criptografia (Keyrings)..."
+  # Atualiza qualquer pacote que termine em -keyring para cobrir arch, cachyos, chaotic, etc.
+  # Usamos --needed para não reinstalar se já estiver atualizado.
+  $SUDO pacman -Sy --noconfirm --needed archlinux-keyring *-keyring 2>/dev/null || warn "Falha ao atualizar keyrings (pode ser normal se não houver updates)."
+}
+
+system_update() {
+  log "Iniciando atualização do sistema (Pacman)..."
+  # -Syu: Sync, Refresh, SysUpgrade. Não use -Syyu a menos que os mirrors tenham mudado drasticamente.
+  if ! $SUDO pacman -Syu --noconfirm; then
+    die "Falha crítica na atualização do pacman."
   fi
   ok "Pacotes oficiais atualizados."
-  printf '\n'
 }
 
-update_aur() {
-  # Prioriza yay, depois paru
-  if command -v yay >/dev/null 2>&1; then
-    log "Atualizando pacotes do AUR com yay..."
-    if ! yay -Syu --noconfirm; then
-      die "Erro ao atualizar pacotes do AUR com yay."
-    fi
-    ok "AUR atualizado com yay."
-  elif command -v paru >/dev/null 2>&1; then
-    log "Atualizando pacotes do AUR com paru..."
-    if ! paru -Syu --noconfirm; then
-      die "Erro ao atualizar pacotes do AUR com paru."
-    fi
-    ok "AUR atualizado com paru."
+aur_update() {
+  log "Verificando helpers AUR..."
+  # Detecta o usuário real se estiver rodando com sudo para não quebrar makepkg
+  local REAL_USER="${SUDO_USER:-$USER}"
+
+  if command -v paru >/dev/null 2>&1; then
+    log "Usando Paru..."
+    # Paru e Yay não devem ser rodados como root
+    sudo -u "$REAL_USER" paru -Syu --noconfirm || warn "Falha no Paru."
+  elif command -v yay >/dev/null 2>&1; then
+    log "Usando Yay..."
+    sudo -u "$REAL_USER" yay -Syu --noconfirm || warn "Falha no Yay."
   else
-    warn "Nenhum helper AUR encontrado (yay/paru). Pulando atualização do AUR."
+    warn "Nenhum helper AUR instalado."
   fi
-  printf '\n'
 }
 
-update_flatpak() {
-  if command -v flatpak >/dev/null 2>&1; then
-    log "Atualizando pacotes Flatpak..."
-    if ! flatpak update -y; then
-      die "Erro ao atualizar pacotes Flatpak."
-    fi
-    ok "Flatpaks atualizados."
+cleanup_smart() {
+  log "Iniciando limpeza inteligente..."
+
+  # 1. Órfãos
+  if [[ -n $(pacman -Qtdq) ]]; then
+    log "Removendo pacotes órfãos..."
+    $SUDO pacman -Rns --noconfirm $(pacman -Qtdq) || warn "Falha ao remover órfãos."
   else
-    warn "Flatpak não encontrado. Pulando atualização de Flatpak."
-  fi
-  printf '\n'
-}
-
-clean_orphans() {
-  log "Verificando pacotes órfãos..."
-  # Captura órfãos em variável; pode não haver nenhum
-  local orphans
-  orphans="$(pacman -Qtdq 2>/dev/null || true)"
-
-  if [[ -z "${orphans:-}" ]]; then
-    ok "Nenhum pacote órfão encontrado."
-    return
+    ok "Zero pacotes órfãos."
   fi
 
-  log "Removendo pacotes órfãos..."
-  $SUDO pacman -Rns --noconfirm $orphans || warn "Falha ao remover alguns pacotes órfãos."
-  ok "Limpeza de órfãos concluída."
-  printf '\n'
+  # 2. Cache (A MELHORIA CRÍTICA)
+  if command -v paccache >/dev/null 2>&1; then
+    log "Limpando cache mantendo as últimas $KEEP_CACHE_VERSIONS versões (paccache)..."
+    $SUDO paccache -r -k $KEEP_CACHE_VERSIONS
+    $SUDO paccache -ruk0 # Remove cache de pacotes desinstalados
+  else
+    warn "'pacman-contrib' não instalado. Usando método fallback seguro (pacman -Sc)."
+    # -Sc mantém os pacotes instalados, remove apenas os não instalados e dbs antigos.
+    # NUNCA use -Scc em scripts automáticos.
+    echo "y" | $SUDO pacman -Sc
+  fi
+
+  # 3. Journal (Logs do Systemd)
+  log "Vacuuming logs do systemd (>50M)..."
+  $SUDO journalctl --vacuum-size=50M >/dev/null 2>&1
 }
 
-clean_cache() {
-  log "Limpando cache do pacman (pacman -Scc)..."
-  # --noconfirm evita os prompts interactivos
-  $SUDO pacman -Scc --noconfirm || warn "Falha ao limpar cache do pacman."
-  ok "Cache do pacman limpo."
-  printf '\n'
+check_pacnew() {
+  log "Verificando arquivos .pacnew (Configurações pendentes)..."
+  # Procura arquivos .pacnew em /etc
+  local pacnews
+  pacnews=$(find /etc -name "*.pacnew" 2>/dev/null)
+
+  if [[ -n "$pacnews" ]]; then
+    warn "ATENÇÃO: Arquivos .pacnew detectados. Você deve mesclar configurações manualmente:"
+    echo "$pacnews"
+  else
+    ok "Nenhum arquivo .pacnew encontrado. Configurações limpas."
+  fi
 }
 
-clean_configs_tips() {
-  log "Dicas de limpeza de configs/resíduos:"
-  printf '  - Verifique arquivos *.pacnew e *.pacsave em /etc\n'
-  printf '  - Revise configs antigas em ~/.config e /etc para apps desinstalados\n'
-  printf '  - Logs antigos podem acumular em /var/log\n'
-  printf '  - Exemplos úteis:\n'
-  printf '      find ~ -iname "*<nome_app>*"\n'
-  printf '      sudo find /etc -iname "*<nome_app>*"\n'
-  printf '      sudo journalctl --vacuum-size=50M\n'
-  printf '      sudo journalctl --vacuum-time=7days\n'
-  printf '\n'
-}
-
-print_header() {
-  clear || true
-  echo "====================================================="
-  echo " Manutenção do sistema - $(date)"
-  echo " Usuário: $USER"
-  echo " Hostname: $(hostname)"
-  echo " Kernel: $(uname -r)"
-  echo "====================================================="
-  echo
-}
+# --- Main Execution ---
 
 main() {
-  print_header
+  clear
+  echo "====================================================="
+  echo "   UNIVERSAL LINUX MAINTENANCE - $(hostname)"
+  echo "====================================================="
 
-  update_mirrors_and_base
-  update_pacman
-  update_aur
-  update_flatpak
+  check_internet
+  update_mirrors
+  update_keyrings
+  system_update
+  aur_update
 
-  clean_orphans
-  clean_cache
-  clean_configs_tips
+  if command -v flatpak >/dev/null 2>&1; then
+    log "Atualizando Flatpaks..."
+    flatpak update -y
+  fi
 
-  ok "Manutenção completa finalizada com sucesso. 🚀"
+  cleanup_smart
+  check_pacnew
+
+  echo "====================================================="
+  ok "Manutenção concluída. Reinicie se houve atualização de Kernel."
+  echo "====================================================="
 }
 
 main "$@"
