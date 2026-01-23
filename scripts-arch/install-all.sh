@@ -68,63 +68,97 @@ run_step() {
 }
 
 STEPS=(
-    "autofs.sh"
-    "configure-git.sh"
-    "fix-services.sh"
-    "install-stow.sh"
-    "install-alacritty.sh"
-    "install-asdf.sh"
+    # ----------------------------------------
+    # 1. System Base & Core Utilities
+    # ----------------------------------------
     "install-base-devel.sh"
-    "install-cmake.sh"
-    "install-curl.sh"
-    "install-dotfiles.sh"
-    "install-emacs.sh"
+    "install-git.sh"
+    "install-stow.sh"
+    "install-yay.sh" # AUR helper (needed early for AUR packages)
+    "install-unzip.sh"
+    "install-jq.sh"
     "install-eza.sh"
+    "install-zoxide.sh"
+    "install-linux-toys.sh"
+
+    # ----------------------------------------
+    # 2. Languages & Runtimes
+    # ----------------------------------------
+    "install-go-tools.sh" # Go itself is installed via ensure_package in this script
+    "install-python.sh"
+    "install-python-tools.sh"
+    "install-ruby.sh" # Depends on asdf and base-devel, so asdf should be installed
+    "install-rust.sh"
+
+    # ----------------------------------------
+    # 3. Graphics, Multimedia & Drivers
+    # ----------------------------------------
+    "install-fonts.sh"
+    "install-mesa-radeon.sh"
+    "install-vulkan-stack.sh"
+    "install-lib32-libs.sh"
+    "install-libva-utils.sh"
+    "install-gvfs.sh"
+
+    # ----------------------------------------
+    # 4. Terminal Emulators & Shells
+    # ----------------------------------------
+    "install-alacritty.sh"
+    "install-kitty.sh"
+    "install-tmux.sh"
+    "install-zsh-env.sh"
+    "install-ohmybash-starship.sh"
+    "install-dank-material-shell.sh" # Shell customization
+    "set-shell.sh" # Change default shell (should be after shell installs)
+
+    # ----------------------------------------
+    # 5. Networking & Storage
+    # ----------------------------------------
+    "install-ntfs-3g.sh"
+    "install-samba.sh"
+    "autofs.sh"
+    "install-wl-clipboard.sh"
+    "fix-services.sh"
+
+    # ----------------------------------------
+    # 6. Browsers
+    # ----------------------------------------
+    "install-vivaldi.sh"
+    "install-brave.sh"
+
+    # ----------------------------------------
+    # 7. Development Tools
+    # ----------------------------------------
+    "install-asdf.sh" # Version manager for languages
+    "install-cmake.sh"
+    "install-nodejs.sh"
+    "install-npm-global.sh"
+    "install-lsps.sh"
+    "install-vscode.sh"
+    "configure-git.sh" # Configuration, depends on git
+
+    # ----------------------------------------
+    # 8. Applications
+    # ----------------------------------------
+    "install-remmina.sh"
+    "install-vlc.sh"
+    "install-yazi-deps.sh" # Yazi dependencies first
+    "install-yazi.sh" # Then Yazi itself
+    "install-steam.sh"
+    "install-wine-stack.sh"
+    "install-postgresql.sh"
+
+    # ----------------------------------------
+    # 9. Flatpak Applications (Requires Flatpak setup first)
+    # ----------------------------------------
     "install-flatpak-flathub.sh"
     "install-flatpak-pupgui2.sh"
     "install-flatpak-spotify.sh"
-    "install-fonts.sh"
-    "install-ghostty.sh"
-    "install-git.sh"
-    "install-go-tools.sh"
-    "install-gvfs.sh"
-    "install-hyprland-overrides.sh"
-    "install-jq.sh"
-    "install-kitty.sh"
-    "install-lazygit.sh"
-    "install-lib32-libs.sh"
-    "install-libva-utils.sh"
-    "install-linux-toys.sh"
-    "install-lsps.sh"
-    "install-mesa-radeon.sh"
-    "install-nodejs.sh"
-    "install-npm-global.sh"
-    "install-ntfs-3g.sh"
-    "install-ohmybash-starship.sh"
-    "install-dank-material-shell.sh"
-    "install-brave.sh"
-    "install-remmina.sh"
-    "install-yazi-deps.sh"
-    "install-postgresql.sh"
-    "install-python-tools.sh"
-    "install-python.sh"
-    "install-ruby.sh"
-    "install-rust.sh"
-    "install-samba.sh"
-    "install-steam.sh"
-    "install-tmux.sh"
-    "install-unzip.sh"
-    "install-vivaldi.sh"
-    "install-vlc.sh"
-    "install-vscode.sh"
-    "install-vulkan-stack.sh"
-    "install-wine-stack.sh"
-    "install-wl-clipboard.sh"
-    "install-yay.sh"
-    "install-yazi.sh"
-    "install-zoxide.sh"
-    "install-zsh-env.sh"
-    "set-shell.sh"
+    
+    # ----------------------------------------
+    # 10. Desktop Environment Overrides (Hyprland specific)
+    # ----------------------------------------
+    "install-hyprland-overrides.sh" # Specific DE config, usually last
 )
 
 for step in "${STEPS[@]}"; do
