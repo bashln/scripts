@@ -16,55 +16,55 @@ info "Iniciando instalação. Log completo em: $LOG_FILE"
 # Mantém o sudo vivo em background para quando precisarmos
 sudo -v
 while true; do
-  sudo -n true
-  sleep 60
-  kill -0 "$$" || exit
+    sudo -n true
+    sleep 60
+    kill -0 "$$" || exit
 done 2>/dev/null &
 
 run_step() {
-  local script="$1"
-  local path="$BASE_DIR/assets/$script"
+    local script="$1"
+    local path="$BASE_DIR/assets/$script"
 
-  if [[ ! -x "$path" ]]; then
-    warn "Script ignorado (não executável): $script"
-    return
-  fi
-
-  # --- INTEGRAÇÃO DA INTELIGÊNCIA ---
-  # Detecta se o script pede root explicitamente
-  local requires_root=0
-  if grep -q "^REQUIRES_ROOT=1" "$path"; then
-    requires_root=1
-  fi
-
-  info ">>> Executando módulo: $script"
-
-  local exit_code=0
-
-  if [[ $requires_root -eq 1 ]]; then
-    # Se requer root, usamos sudo E passamos a variável LOG_FILE adiante
-    # (Sem isso, o script filho não consegue escrever no log)
-    if sudo LOG_FILE="$LOG_FILE" "$path"; then
-      exit_code=0
-    else
-      exit_code=1
+    if [[ ! -x "$path" ]]; then
+        warn "Script ignorado (não executável): $script"
+        return
     fi
-  else
-    # Se não requer root (ex: dotfiles, stow), roda como seu usuário normal
-    if "$path"; then
-      exit_code=0
-    else
-      exit_code=1
-    fi
-  fi
 
-  if [[ $exit_code -eq 0 ]]; then
-    ok "Módulo $script finalizado com sucesso."
-    SUCCESS_STEPS+=("$script")
-  else
-    fail "Módulo $script FALHOU."
-    FAILED_STEPS+=("$script")
-  fi
+    # --- INTEGRAÇÃO DA INTELIGÊNCIA ---
+    # Detecta se o script pede root explicitamente
+    local requires_root=0
+    if grep -q "^REQUIRES_ROOT=1" "$path"; then
+        requires_root=1
+    fi
+
+    info ">>> Executando módulo: $script"
+
+    local exit_code=0
+
+    if [[ $requires_root -eq 1 ]]; then
+        # Se requer root, usamos sudo E passamos a variável LOG_FILE adiante
+        # (Sem isso, o script filho não consegue escrever no log)
+        if sudo LOG_FILE="$LOG_FILE" "$path"; then
+            exit_code=0
+        else
+            exit_code=1
+        fi
+    else
+        # Se não requer root (ex: dotfiles, stow), roda como seu usuário normal
+        if "$path"; then
+            exit_code=0
+        else
+            exit_code=1
+        fi
+    fi
+
+    if [[ $exit_code -eq 0 ]]; then
+        ok "Módulo $script finalizado com sucesso."
+        SUCCESS_STEPS+=("$script")
+    else
+        fail "Módulo $script FALHOU."
+        FAILED_STEPS+=("$script")
+    fi
 }
 
 STEPS=(
@@ -109,7 +109,7 @@ STEPS=(
     "install-zsh-env.sh"
     "install-ohmybash-starship.sh"
     "install-dank-material-shell.sh" # Shell customization
-    "set-shell.sh" # Change default shell (should be after shell installs)
+    "set-shell.sh"                   # Change default shell (should be after shell installs)
 
     # ----------------------------------------
     # 5. Networking & Storage
@@ -143,7 +143,7 @@ STEPS=(
     "install-remmina.sh"
     "install-vlc.sh"
     "install-yazi-deps.sh" # Yazi dependencies first
-    "install-yazi.sh" # Then Yazi itself
+    "install-yazi.sh"      # Then Yazi itself
     "install-steam.sh"
     "install-wine-stack.sh"
     "install-postgresql.sh"
@@ -154,15 +154,16 @@ STEPS=(
     "install-flatpak-flathub.sh"
     "install-flatpak-pupgui2.sh"
     "install-flatpak-spotify.sh"
-    
+
     # ----------------------------------------
     # 10. Desktop Environment Overrides (Hyprland specific)
     # ----------------------------------------
     "install-hyprland-overrides.sh" # Specific DE config, usually last
+    "install-hyprland-autostart.sh"
 )
 
 for step in "${STEPS[@]}"; do
-  run_step "$step"
+    run_step "$step"
 done
 
 # --- RELATÓRIO ---
@@ -174,19 +175,19 @@ echo "Log file: $LOG_FILE"
 echo ""
 
 if [ ${#SUCCESS_STEPS[@]} -gt 0 ]; then
-  printf "${GREEN}Sucessos (${#SUCCESS_STEPS[@]}):${RESET}\n"
-  printf "  - %s\n" "${SUCCESS_STEPS[@]}"
+    printf "${GREEN}Sucessos (${#SUCCESS_STEPS[@]}):${RESET}\n"
+    printf "  - %s\n" "${SUCCESS_STEPS[@]}"
 fi
 
 echo ""
 
 if [ ${#FAILED_STEPS[@]} -gt 0 ]; then
-  printf "${RED}FALHAS (${#FAILED_STEPS[@]}):${RESET}\n"
-  printf "  - %s\n" "${FAILED_STEPS[@]}"
-  echo ""
-  warn "Verifique o arquivo $LOG_FILE."
-  exit 1
+    printf "${RED}FALHAS (${#FAILED_STEPS[@]}):${RESET}\n"
+    printf "  - %s\n" "${FAILED_STEPS[@]}"
+    echo ""
+    warn "Verifique o arquivo $LOG_FILE."
+    exit 1
 else
-  ok "Instalação completa sem erros!"
-  exit 0
+    ok "Instalação completa sem erros!"
+    exit 0
 fi
