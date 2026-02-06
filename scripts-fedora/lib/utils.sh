@@ -1,0 +1,138 @@
+#!/bin/bash
+# lib/utils.sh - Biblioteca de utilidades para scripts Fedora
+# Equivalente ao utils.sh do Arch, adaptado para DNF/COPR/Flatpak
+
+# Definicao de Arquivo de Log Global
+LOG_FILE="${LOG_FILE:-/tmp/install-fedora-$(date +%Y%m%d-%H%M%S).log}"
+
+# Cores
+BLUE='\e[34m'
+GREEN='\e[32m'
+YELLOW='\e[33m'
+RED='\e[31m'
+RESET='\e[0m'
+
+# Funcao de Log Interna (Escreve no arquivo e na tela)
+_log() {
+    local level="$1"
+    local color="$2"
+    local msg="$3"
+    local timestamp
+    timestamp=$(date +"%Y-%m-%d %H:%M:%S")
+
+    # Escrita no Arquivo (Sem cores, com timestamp)
+    echo "[$timestamp] [$level] $msg" >> "$LOG_FILE"
+
+    # Escrita na Tela (Com cores)
+    printf "${color}[%s] %s${RESET}\n" "$level" "$msg" >&2
+}
+
+info() { _log "INFO" "$BLUE" "$*"; }
+ok()   { _log "OK"   "$GREEN" "$*"; }
+warn() { _log "WARN" "$YELLOW" "$*"; }
+fail() { _log "FAIL" "$RED" "$*"; }
+die() {
+    fail "$*"
+    exit 1
+}
+
+# --- Funcao de Verificacao de Pacotes (Fedora/DNF) ---
+# Verifica se esta instalado antes de chamar o dnf (Economiza tempo/Performance)
+ensure_package() {
+    local pkg="$1"
+
+    if rpm -q "$pkg" &>/dev/null; then
+        info "Pacote '$pkg' ja instalado. Pulando."
+        return 0
+    fi
+
+    info "Instalando pacote: $pkg..."
+    if sudo dnf install -y "$pkg" >> "$LOG_FILE" 2>&1; then
+        ok "Pacote '$pkg' instalado."
+    else
+        fail "Erro ao instalar '$pkg'. Verifique o log: $LOG_FILE"
+        return 1
+    fi
+}
+
+# Instala um grupo de pacotes DNF (ex: @development-tools)
+ensure_group() {
+    local grp="$1"
+
+    if dnf group list --installed 2>/dev/null | grep -qi "$grp"; then
+        info "Grupo '$grp' ja instalado. Pulando."
+        return 0
+    fi
+
+    info "Instalando grupo: $grp..."
+    if sudo dnf group install -y "$grp" >> "$LOG_FILE" 2>&1; then
+        ok "Grupo '$grp' instalado."
+    else
+        fail "Erro ao instalar grupo '$grp'. Verifique o log: $LOG_FILE"
+        return 1
+    fi
+}
+
+# Habilita um repositorio COPR e instala o pacote
+# Uso: ensure_copr_package "owner/repo" "pacote"
+ensure_copr_package() {
+    local repo="$1"
+    local pkg="$2"
+
+    if rpm -q "$pkg" &>/dev/null; then
+        info "Pacote COPR '$pkg' ja instalado. Pulando."
+        return 0
+    fi
+
+    info "Habilitando COPR: $repo..."
+    if ! sudo dnf copr enable -y "$repo" >> "$LOG_FILE" 2>&1; then
+        warn "Falha ao habilitar COPR '$repo' (pode ja estar habilitado)."
+    fi
+
+    info "Instalando pacote COPR: $pkg..."
+    if sudo dnf install -y "$pkg" >> "$LOG_FILE" 2>&1; then
+        ok "Pacote COPR '$pkg' instalado."
+    else
+        fail "Erro ao instalar o pacote COPR '$pkg'. Verifique o log: $LOG_FILE"
+        return 1
+    fi
+}
+
+ensure_flatpak_package() {
+    local pkg="$1"
+
+    if flatpak info "$pkg" &>/dev/null; then
+        info "Pacote Flatpak '$pkg' ja instalado. Pulando."
+        return 0
+    fi
+
+    info "Instalando pacote Flatpak: $pkg..."
+    if flatpak install -y flathub "$pkg" >> "$LOG_FILE" 2>&1; then
+        ok "Pacote Flatpak '$pkg' instalado."
+    else
+        fail "Erro ao instalar o pacote Flatpak '$pkg'. Verifique o log: $LOG_FILE"
+        return 1
+    fi
+}
+
+# Habilita RPM Fusion (free + nonfree) se ainda nao estiver habilitado
+ensure_rpmfusion() {
+    if rpm -q rpmfusion-free-release &>/dev/null && rpm -q rpmfusion-nonfree-release &>/dev/null; then
+        info "RPM Fusion ja habilitado. Pulando."
+        return 0
+    fi
+
+    info "Habilitando RPM Fusion (free + nonfree)..."
+    local fedora_version
+    fedora_version=$(rpm -E %fedora)
+
+    if sudo dnf install -y \
+        "https://mirrors.rpmfusion.org/free/fedora/rpmfusion-free-release-${fedora_version}.noarch.rpm" \
+        "https://mirrors.rpmfusion.org/nonfree/fedora/rpmfusion-nonfree-release-${fedora_version}.noarch.rpm" \
+        >> "$LOG_FILE" 2>&1; then
+        ok "RPM Fusion habilitado."
+    else
+        fail "Erro ao habilitar RPM Fusion. Verifique o log: $LOG_FILE"
+        return 1
+    fi
+}
