@@ -1,195 +1,230 @@
-# 🧩 bshln-scripts
+# bshln-scripts
 
-Coleção de scripts Bash para pós-instalação e setup completo de ambiente Arch Linux.  
-Automatiza a instalação de ferramentas de desenvolvimento, linguagens, utilitários e configurações pessoais.
+Colecao de scripts Bash para pos-instalacao e setup completo de ambiente Linux.
+Suporta **Arch Linux**, **Fedora Workstation**, e **Pop!_OS/Ubuntu**.
 
-Cada script foi projetado para ser **idempotente** — você pode executá-los quantas vezes quiser sem quebrar o sistema ou repetir tarefas desnecessárias.
+Automatiza a instalacao de ferramentas de desenvolvimento, linguagens, utilitarios e configuracoes pessoais.
+
+Cada script foi projetado para ser **idempotente** -- voce pode executa-los quantas vezes quiser sem quebrar o sistema ou repetir tarefas desnecessarias.
 
 ---
 
-## 🚀 Objetivo
+## Objetivo
 
-Facilitar a configuração de novos sistemas e ambientes de trabalho de forma segura, reprodutível e modular.
+Facilitar a configuracao de novos sistemas e ambientes de trabalho de forma segura, reprodutivel e modular.
 
 Esses scripts foram escritos para:
 
 - Recriar rapidamente o ambiente de desenvolvimento completo.
-- Serem executados individualmente ou em sequência.
-- Evitar reinstalações desnecessárias.
-- Ser legíveis, simples e padronizados.
+- Serem executados individualmente ou em sequencia.
+- Evitar reinstalacoes desnecessarias.
+- Ser legiveis, simples e padronizados.
 
 ---
 
-## 🧠 Estrutura do projeto
+## Estrutura do Projeto
 
-- bshln-scripts/scripts
-
-  ├── install-all.sh # Executa todos os scripts em ordem  
-  ├── modelo.sh # Modelo padrão para novos scripts  
-  ├── lib.sh # (opcional) Funções globais de log  
-  ├── install-\*.sh # Scripts individuais de instalação  
-  │  
-  ├── configure-git.sh # Exemplo de configuração (Git)  
-  ├── install-ohmybash-starship.sh # Instalação do Oh My Bash + Starship  
-  ├── install-dotfiles.sh # Aplica dotfiles com GNU Stow  
-  ├── set-shell.sh # Define Zsh como shell padrão  
-  └── ... # Outros scripts de setup
-
-- Cada script segue o mesmo padrão:
-
-```bash
-set -euo pipefail
-info()  { printf "\e[34m[*]\e[0m %s\n" "$*"; }
-ok()    { printf "\e[32m[+]\e[0m %s\n" "$*"; }
-warn()  { printf "\e[33m[!]\e[0m %s\n" "$*"; }
-fail()  { printf "\e[31m[✗]\e[0m %s\n" "$*"; }
+```
+bshln-scripts/
+├── README.md
+├── scripts-arch/              # Scripts para Arch Linux / CachyOS
+│   ├── install-all.sh         # Orquestrador principal
+│   ├── update.sh              # Atualizacao leve
+│   ├── full-update.sh         # Atualizacao completa
+│   ├── lib/
+│   │   └── utils.sh           # Biblioteca core (pacman/yay)
+│   └── assets/
+│       └── install-*.sh       # Scripts individuais
+│
+├── scripts-fedora/            # Scripts para Fedora Workstation 41+
+│   ├── install-all.sh         # Orquestrador principal
+│   ├── update.sh              # Atualizacao leve
+│   ├── full-update.sh         # Atualizacao completa
+│   ├── copr-manager.sh        # Gerenciador de repos COPR
+│   ├── flatpak-manager.sh     # Gerenciador de apps Flatpak
+│   ├── distrobox-setup.sh     # Container Arch para pacotes AUR
+│   ├── system-maintenance.sh  # Manutencao completa do sistema
+│   ├── lib/
+│   │   └── utils.sh           # Biblioteca core (dnf/copr)
+│   └── assets/
+│       └── install-*.sh       # Scripts individuais
+│
+├── scripts-apt/               # Scripts para Pop!_OS / Ubuntu
+│   ├── post-install-apt.sh
+│   ├── pop-update.sh
+│   ├── pop-clean.sh
+│   └── npm-install-fnm-rootless.sh
+│
+└── docs/
+    ├── EQUIVALENCES.md        # Tabela pacman -> dnf
+    └── MIGRATION.md           # Guia de migracao Arch -> Fedora
 ```
 
-## ⚙️ Como usar
+---
 
-1. Clonar o repositório
+## Como Usar
 
-```bash
-
-git clone https://gitlab.com/teuusuario/bshln-scripts.git
-cd bshln-scripts
-cd scripts/
-```
-
-2. Tornar scripts executáveis
+### Arch Linux / CachyOS
 
 ```bash
+git clone <repo-url>
+cd scripts/scripts-arch
+chmod +x *.sh assets/*.sh
 
-chmod +x *.sh
-```
-
-3. Executar o instalador principal
-
-```bash
-
-./install-all.sh
-```
-
-O script install-all.sh irá executar todos os scripts em ordem.
-Se algum falhar, ele registra o erro mas continua a execução (modo resiliente).
-
-Você também pode rodar um script individual:
-
-```bash
-
-./install-ohmybash-starship.sh
-```
-
-## 🔁 Idempotência
-
-Todos os scripts foram escritos para poderem ser executados várias vezes sem causar erros ou reinstalações desnecessárias.
-
-Por exemplo:
-
-Se o pacote já está instalado → apenas registra e pula.
-
-Se o repositório já foi clonado → apenas atualiza com git pull.
-
-Se a configuração já existe → nada é sobrescrito.
-
-## 🧩 Criando novos scripts
-
-Para adicionar um novo script, basta copiar o modelo:
-
-```bash
-
-cp modelo.sh install-nome-da-ferramenta.sh
-chmod +x install-nome-da-ferramenta.sh
-```
-
-Edite apenas a função main() e adicione o nome do novo arquivo ao array steps dentro de install-all.sh.
-
-Exemplo de trecho em install-all.sh:
-
-```bash
-
-local steps=(
-  install-nodejs.sh
-  install-rust.sh
-  install-nome-da-ferramenta.sh  # novo script aqui
-)
-```
-
-## 🔒 Permissões e sudo
-
-Os scripts detectam automaticamente se estão sendo executados como root.
-Se não estiver, o sudo será usado nas operações que exigem privilégios.
-
-## 🧰 Dependências básicas
-
-Antes de rodar o setup completo, certifique-se de que tem o mínimo necessário instalado:
-
-```bash
-
+# Dependencias minimas
 sudo pacman -S --needed git base-devel curl
+
+# Instalar tudo
+./install-all.sh
+
+# Atualizar sistema
+./update.sh
 ```
 
-## 🧙‍♂️ Filosofia
-
-Este projeto segue alguns princípios:
-
-- Idempotência: rodar 100 vezes deve dar o mesmo resultado.
-
-- Legibilidade: código simples > “mágico”.
-
-- Autonomia: cada script faz uma coisa só.
-
-- Logs claros: sempre saber o que foi feito e o que falhou.
-
-- Reprodutibilidade: do zero ao ambiente pronto em minutos.
-
-## 🛠️ Exemplos de scripts incluídos
-
-- Script Descrição
-  - install-base-devel.sh -> Instala ferramentas de compilação básicas
-  - ainstall-flatpak-flathub.sh Configura o Flatpak com o repositório Flathub
-  - install-go-tools.sh Instala gopls, goimports e outras ferramentas Go
-  - install-ohmybash-starship.sh Instala Oh My Bash + Starship Prompt
-  - install-tmux.sh Instala e configura tmux + TPM
-  - install-dotfiles.sh Clona e aplica seus dotfiles com GNU Stow
-  - set-shell.sh Define Zsh como shell padrão
-
-## 🧩 Exemplo de saída
-
-- [*] Executando: install-nodejs.sh
-
-- [+] nodejs já está instalado.
-
-- [*] Executando: install-vscode.sh
-
-- [+] Visual Studio Code instalado com sucesso.
-
-- [!] Falha ao instalar Steam (pacote ausente no repositório)
-
-- [+] Todas as etapas concluídas!
-
-## 💬 Contribuição
-
-Crie uma branch:
+### Fedora Workstation
 
 ```bash
+git clone <repo-url>
+cd scripts/scripts-fedora
+chmod +x *.sh assets/*.sh
 
-git checkout -b feature/novo-script
+# Dependencias minimas (ja vem com Fedora)
+sudo dnf install -y git curl
+
+# Instalar tudo
+./install-all.sh
+
+# Atualizar sistema
+./update.sh
+
+# Manutencao completa
+./system-maintenance.sh
+
+# Preview sem executar
+./system-maintenance.sh --dry-run
 ```
 
-Copie o modelo (modelo.sh) e adicione sua automação.
-
-Teste localmente rodando:
+### Pop!_OS / Ubuntu
 
 ```bash
+git clone <repo-url>
+cd scripts/scripts-apt
 
-./install-novo-script.sh
+# Instalacao completa
+./post-install-apt.sh
+
+# Atualizar sistema
+./pop-update.sh
+
+# Limpeza
+./pop-clean.sh
 ```
 
-Faça commit e abra um merge request no GitLab.
+---
 
-## 🧾 Licença
+## Scripts Exclusivos do Fedora
 
-Este projeto é distribuído sob a licença MIT.
+### copr-manager.sh
 
-Use, modifique e compartilhe livremente, mas mencione a origem se for reutilizar partes do código.
+Gerenciador de repositorios COPR (equivalente ao AUR helper):
+
+```bash
+./copr-manager.sh search yazi
+./copr-manager.sh install atim/yazi yazi
+./copr-manager.sh list
+./copr-manager.sh disable atim/yazi
+```
+
+### flatpak-manager.sh
+
+Gerenciador de aplicacoes Flatpak:
+
+```bash
+./flatpak-manager.sh search spotify
+./flatpak-manager.sh install com.spotify.Client
+./flatpak-manager.sh update
+./flatpak-manager.sh cleanup
+./flatpak-manager.sh size
+```
+
+### distrobox-setup.sh
+
+Container Arch Linux para pacotes AUR sem equivalente Fedora:
+
+```bash
+./distrobox-setup.sh create           # Cria container Arch com yay
+./distrobox-setup.sh install pkg-aur  # Instala pacote AUR
+./distrobox-setup.sh export pkg-aur   # Exporta app para o host
+./distrobox-setup.sh export-bin bin   # Exporta binario para ~/.local/bin
+```
+
+### system-maintenance.sh
+
+Rotina completa de manutencao: DNF + Flatpak + Firmware + Limpeza:
+
+```bash
+./system-maintenance.sh              # Executa tudo
+./system-maintenance.sh --dry-run    # Preview sem executar
+```
+
+---
+
+## Idempotencia
+
+Todos os scripts foram escritos para poderem ser executados varias vezes sem causar erros:
+
+- Se o pacote ja esta instalado -> apenas registra e pula.
+- Se o repositorio ja foi clonado -> apenas atualiza com git pull.
+- Se a configuracao ja existe -> nada e sobrescrito.
+
+---
+
+## Biblioteca Core (lib/utils.sh)
+
+Cada distro tem sua propria `utils.sh` com funcoes equivalentes:
+
+| Funcao | Arch | Fedora |
+|--------|------|--------|
+| `ensure_package "pkg"` | `pacman -S` | `dnf install` |
+| `ensure_aur_package "pkg"` | `yay -S` | N/A |
+| `ensure_copr_package "repo" "pkg"` | N/A | `dnf copr enable + install` |
+| `ensure_group "grp"` | N/A | `dnf group install` |
+| `ensure_flatpak_package "app"` | `flatpak install` | `flatpak install` |
+| `ensure_rpmfusion` | N/A | Habilita RPM Fusion |
+| `info()`, `ok()`, `warn()`, `fail()` | Log colorido | Log colorido |
+
+---
+
+## Documentacao
+
+- **[docs/EQUIVALENCES.md](docs/EQUIVALENCES.md)** - Tabela completa de equivalencias pacman -> dnf
+- **[docs/MIGRATION.md](docs/MIGRATION.md)** - Guia detalhado de migracao Arch -> Fedora
+
+---
+
+## Filosofia
+
+- **Idempotencia**: rodar 100 vezes deve dar o mesmo resultado.
+- **Legibilidade**: codigo simples > "magico".
+- **Autonomia**: cada script faz uma coisa so.
+- **Logs claros**: sempre saber o que foi feito e o que falhou.
+- **Reprodutibilidade**: do zero ao ambiente pronto em minutos.
+- **Multi-distro**: mesma logica, adaptada para cada gerenciador.
+
+---
+
+## Contribuicao
+
+1. Crie uma branch: `git checkout -b feature/novo-script`
+2. Adicione seu script no diretorio da distro correspondente
+3. Adicione o nome do script ao array STEPS em `install-all.sh`
+4. Teste: `./assets/install-novo-script.sh`
+5. Faca commit e abra um merge request
+
+---
+
+## Licenca
+
+Este projeto e distribuido sob a licenca MIT.
+
+Use, modifique e compartilhe livremente, mas mencione a origem se for reutilizar partes do codigo.
