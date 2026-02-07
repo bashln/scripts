@@ -40,18 +40,31 @@ run_step() {
     info ">>> Executando módulo: $script"
 
     local exit_code=0
+    local spinner_title="Executando módulo: $script"
 
     if [[ $requires_root -eq 1 ]]; then
         # Se requer root, usamos sudo E passamos a variável LOG_FILE adiante
         # (Sem isso, o script filho não consegue escrever no log)
-        if sudo LOG_FILE="$LOG_FILE" "$path"; then
+        if [[ ${GUM_AVAILABLE:-0} -eq 1 ]]; then
+            if gum spin --spinner dot --title "$spinner_title" -- sudo LOG_FILE="$LOG_FILE" "$path"; then
+                exit_code=0
+            else
+                exit_code=1
+            fi
+        elif sudo LOG_FILE="$LOG_FILE" "$path"; then
             exit_code=0
         else
             exit_code=1
         fi
     else
         # Se não requer root (ex: dotfiles, stow), roda como seu usuário normal
-        if "$path"; then
+        if [[ ${GUM_AVAILABLE:-0} -eq 1 ]]; then
+            if gum spin --spinner dot --title "$spinner_title" -- "$path"; then
+                exit_code=0
+            else
+                exit_code=1
+            fi
+        elif "$path"; then
             exit_code=0
         else
             exit_code=1
@@ -71,10 +84,13 @@ STEPS=(
     # ----------------------------------------
     # 1. System Base & Core Utilities
     # ----------------------------------------
+    "install-gum.sh"
     "install-base-devel.sh"
+    "install-dev-tools.sh"
     "install-git.sh"
     "install-stow.sh"
     "install-yay.sh" # AUR helper (needed early for AUR packages)
+    "install-curl.sh"
     "install-unzip.sh"
     "install-jq.sh"
     "install-eza.sh"
@@ -105,6 +121,7 @@ STEPS=(
     # ----------------------------------------
     "install-alacritty.sh"
     "install-kitty.sh"
+    "install-ghostty.sh"
     "install-tmux.sh"
     "install-zsh-env.sh"
     "install-ohmybash-starship.sh"
@@ -135,6 +152,9 @@ STEPS=(
     "install-npm-global.sh"
     "install-lsps.sh"
     "install-vscode.sh"
+    "install-lazygit.sh"
+    "install-neovim.sh"
+    "install-emacs.sh"
     "configure-git.sh" # Configuration, depends on git
 
     # ----------------------------------------
@@ -154,6 +174,7 @@ STEPS=(
     "install-flatpak-flathub.sh"
     "install-flatpak-pupgui2.sh"
     "install-flatpak-spotify.sh"
+    "install-flatpak-microsoft-edge.sh"
 
     # ----------------------------------------
     # 10. Desktop Environment Overrides (Hyprland specific)

@@ -41,15 +41,28 @@ run_step() {
     info ">>> Executando modulo: $script"
 
     local exit_code=0
+    local spinner_title="Executando modulo: $script"
 
     if [[ $requires_root -eq 1 ]]; then
-        if sudo LOG_FILE="$LOG_FILE" "$path"; then
+        if [[ ${GUM_AVAILABLE:-0} -eq 1 ]]; then
+            if gum spin --spinner dot --title "$spinner_title" -- sudo LOG_FILE="$LOG_FILE" "$path"; then
+                exit_code=0
+            else
+                exit_code=1
+            fi
+        elif sudo LOG_FILE="$LOG_FILE" "$path"; then
             exit_code=0
         else
             exit_code=1
         fi
     else
-        if "$path"; then
+        if [[ ${GUM_AVAILABLE:-0} -eq 1 ]]; then
+            if gum spin --spinner dot --title "$spinner_title" -- "$path"; then
+                exit_code=0
+            else
+                exit_code=1
+            fi
+        elif "$path"; then
             exit_code=0
         else
             exit_code=1
@@ -69,6 +82,7 @@ STEPS=(
     # ----------------------------------------
     # 1. System Base & Core Utilities
     # ----------------------------------------
+    "install-gum.sh"
     "install-dev-tools.sh"
     "install-git.sh"
     "install-stow.sh"
@@ -139,6 +153,7 @@ STEPS=(
     "install-lsps.sh"
     "install-vscode.sh"
     "install-lazygit.sh"
+    "install-neovim.sh"
     "install-emacs.sh"
     "configure-git.sh"
 
@@ -159,6 +174,7 @@ STEPS=(
     "install-flatpak-flathub.sh"
     "install-flatpak-pupgui2.sh"
     "install-flatpak-spotify.sh"
+    "install-flatpak-microsoft-edge.sh"
 
     # ----------------------------------------
     # 11. Desktop Environment Overrides (Hyprland specific)
