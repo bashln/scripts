@@ -1,0 +1,36 @@
+[2026-02-07 07:31:05] [FAIL] Erro ao instalar grupo 'Development Tools'. Verifique o log: /home/lm/bashln/bashln-scripts/scripts-fedora/install.log
+[2026-02-07 07:31:05] [FAIL] Modulo install-dev-tools.sh FALHOU.
+[2026-02-07 07:31:06] [FAIL] Erro ao instalar 'eza'. Verifique o log: /home/lm/bashln/bashln-scripts/scripts-fedora/install.log
+[2026-02-07 07:31:06] [FAIL] Modulo install-eza.sh FALHOU.
+[2026-02-07 07:31:12] [FAIL] asdf nao esta instalado. Por favor, execute install-asdf.sh primeiro.
+[2026-02-07 07:31:12] [FAIL] Modulo install-ruby.sh FALHOU.
+[2026-02-07 07:31:13] [FAIL] Erro ao instalar 'mozilla-fira-mono-fonts'. Verifique o log: /home/lm/bashln/bashln-scripts/scripts-fedora/install.log
+[2026-02-07 07:31:13] [FAIL] Modulo install-fonts.sh FALHOU.
+[2026-02-07 07:31:14] [FAIL] Erro ao instalar 'vkd3d'. Verifique o log: /home/lm/bashln/bashln-scripts/scripts-fedora/install.log
+[2026-02-07 07:31:14] [FAIL] Modulo install-vulkan-stack.sh FALHOU.
+[2026-02-07 07:31:20] [FAIL] Erro ao instalar 'libstdc++.i686'. Verifique o log: /home/lm/bashln/bashln-scripts/scripts-fedora/install.log
+[2026-02-07 07:31:20] [FAIL] Modulo install-lib32-libs.sh FALHOU.
+[2026-02-07 07:32:45] [FAIL] Erro ao instalar 'prettier'. Verifique o log: /home/lm/bashln/bashln-scripts/scripts-fedora/install.log
+[2026-02-07 07:32:45] [FAIL] Modulo install-lsps.sh FALHOU.
+[2026-02-07 07:34:20] [FAIL] Erro ao instalar 'ffmpeg'. Verifique o log: /home/lm/bashln/bashln-scripts/scripts-fedora/install.log
+[2026-02-07 07:34:20] [FAIL] Modulo install-yazi-deps.sh FALHOU.
+[2026-02-07 07:34:21] [FAIL] Erro ao instalar o pacote COPR 'yazi'. Verifique o log: /home/lm/bashln/bashln-scripts/scripts-fedora/install.log
+[2026-02-07 07:34:21] [FAIL] Modulo install-yazi.sh FALHOU.
+[2026-02-07 07:41:49] [FAIL] Modulo install-hyprland-overrides.sh FALHOU.
+[2026-02-07 07:41:49] [FAIL] Modulo install-hyprland-autostart.sh FALHOU.
+[2026-02-07 07:46:51] [FAIL] Erro ao instalar 'eza'. Verifique o log: /home/lm/bashln/bashln-scripts/scripts-fedora/install.log
+[2026-02-07 07:46:51] [FAIL] Modulo install-eza.sh FALHOU.
+[2026-02-07 07:49:16] [FAIL] Modulo install-ruby.sh FALHOU.
+[2026-02-07 07:49:18] [FAIL] Erro ao instalar 'mozilla-fira-mono-fonts'. Verifique o log: /home/lm/bashln/bashln-scripts/scripts-fedora/install.log
+[2026-02-07 07:49:18] [FAIL] Modulo install-fonts.sh FALHOU.
+[2026-02-07 07:49:18] [FAIL] Erro ao instalar 'vkd3d'. Verifique o log: /home/lm/bashln/bashln-scripts/scripts-fedora/install.log
+[2026-02-07 07:49:18] [FAIL] Modulo install-vulkan-stack.sh FALHOU.
+[2026-02-07 07:49:19] [FAIL] Erro ao instalar 'opencl-utils.i686'. Verifique o log: /home/lm/bashln/bashln-scripts/scripts-fedora/install.log
+[2026-02-07 07:49:19] [FAIL] Modulo install-lib32-libs.sh FALHOU.
+[2026-02-07 07:49:46] [FAIL] Erro ao instalar 'prettier'. Verifique o log: /home/lm/bashln/bashln-scripts/scripts-fedora/install.log
+[2026-02-07 07:49:46] [FAIL] Modulo install-lsps.sh FALHOU.
+[2026-02-07 07:49:47] [FAIL] Erro ao instalar 'ffmpeg'. Verifique o log: /home/lm/bashln/bashln-scripts/scripts-fedora/install.log
+[2026-02-07 07:49:47] [FAIL] Modulo install-yazi-deps.sh FALHOU.
+[2026-02-07 07:49:49] [FAIL] Erro ao instalar o pacote COPR 'yazi'. Verifique o log: /home/lm/bashln/bashln-scripts/scripts-fedora/install.log
+[2026-02-07 07:49:49] [FAIL] Modulo install-yazi.sh FALHOU.
+[2026-02-07 07:49:49] [FAIL] Modulo install-postgresql.sh FALHOU.
