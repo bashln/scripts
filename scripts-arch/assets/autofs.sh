@@ -82,6 +82,27 @@ device_id() {
   echo "${device}"
 }
 
+device_id() {
+  local device="$1"
+  local uuid
+  local partuuid
+
+  uuid="$(uuid_of "$device")"
+  if [[ -n "$uuid" ]]; then
+    echo "UUID=${uuid}"
+    return 0
+  fi
+
+  partuuid="$(partuuid_of "$device")"
+  if [[ -n "$partuuid" ]]; then
+    echo "PARTUUID=${partuuid}"
+    return 0
+  fi
+
+  warn "Sem UUID/PARTUUID para ${device}. Usando caminho do dispositivo no fstab."
+  echo "${device}"
+}
+
 # --- Localizar Partições ---
 
 # Processar DEV
