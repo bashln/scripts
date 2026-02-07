@@ -6,6 +6,11 @@ source "$(dirname "${BASH_SOURCE[0]}")/../lib/utils.sh"
 main() {
     info "Instalando PostgreSQL..."
 
+    if rpm -q postgresql postgresql-server postgresql-contrib &>/dev/null; then
+        ok "PostgreSQL ja instalado. Pulando instalacao."
+        return 0
+    fi
+
     packages=(
         "postgresql"
         "postgresql-server"
