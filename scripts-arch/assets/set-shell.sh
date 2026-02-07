@@ -13,7 +13,7 @@ main() {
     fi
 
     # Get the path to zsh
-    ZSH_PATH=$(which zsh)
+    ZSH_PATH=$(which fish)
 
     # Check if zsh is already the default shell
     if [ "$SHELL" = "$ZSH_PATH" ]; then

@@ -6,7 +6,7 @@ set -euo pipefail
 SCRIPTS_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
 # Carrega a biblioteca de logs centralizada
-source "$SCRIPTS_DIR/lib/utils.sh"
+source "$(dirname "${BASH_SOURCE[0]}")/../lib/utils.sh"
 
 # --- Configuração ---
 # Autoconfig EXT4 mounts for dev and 1TB

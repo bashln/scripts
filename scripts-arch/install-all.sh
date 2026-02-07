@@ -95,16 +95,16 @@ STEPS=(
   "install-jq.sh"
   "install-eza.sh"
   "install-zoxide.sh"
-  "install-linux-toys.sh"
+  # "install-linux-toys.sh"
 
   # ----------------------------------------
   # 2. Languages & Runtimes
   # ----------------------------------------
   "install-go-tools.sh" # Go itself is installed via ensure_package in this script
-  "install-python.sh"
-  "install-python-tools.sh"
-  "install-ruby.sh" # Depends on asdf and base-devel, so asdf should be installed
-  "install-rust.sh"
+  # "install-python.sh"
+  # "install-python-tools.sh"
+  # "install-ruby.sh" # Depends on asdf and base-devel, so asdf should be installed
+  # "install-rust.sh"
 
   # ----------------------------------------
   # 3. Graphics, Multimedia & Drivers
@@ -126,7 +126,7 @@ STEPS=(
   # "install-zsh-env.sh"
   # "install-ohmybash-starship.sh"
   "install-dank-material-shell.sh" # Shell customization
-  "set-shell.sh"                   # Change default shell (should be after shell installs)
+  # "set-shell.sh"                   # Change default shell (should be after shell installs)
 
   # ----------------------------------------
   # 5. Networking & Storage
@@ -154,6 +154,7 @@ STEPS=(
   # "install-vscode.sh"
   "install-lazygit.sh"
   "install-emacs.sh"
+  "install-neovim.sh"
   "configure-git.sh" # Configuration, depends on git
 
   # ----------------------------------------
