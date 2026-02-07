@@ -17,11 +17,7 @@ source "$(dirname "${BASH_SOURCE[0]}")/../lib/utils.sh"
 LABEL_DEV="${LABEL_DEV:-dev}"
 LABEL_1TB="${LABEL_1TB:-1TB}"
 DEV_DEV_CAND="${DEV_DEV_CAND:-/dev/sda1}"
-DEV_1TB_CAND="${DEV_1TB_CAND:-/dev/sdb2}"
-
-# Pontos de montagem
-MP_DEV="/mnt/dev"
-MP_1TB="/mnt/1TB"
+DEV_1TB_CAND="${DEV_1TB_CAND:-/dev/sdb1}"
 
 # --- Helpers Locais ---
 # Função die local adaptada para usar o fail da lib
@@ -63,6 +59,28 @@ dev_by_label() { blkid -t "LABEL=$1" -o device 2>/dev/null | head -n1 || true; }
 uuid_of()      { blkid -s UUID -o value "$1" 2>/dev/null || true; }
 partuuid_of()  { blkid -s PARTUUID -o value "$1" 2>/dev/null || true; }
 fstype_of()    { lsblk -ndo FSTYPE "$1" 2>/dev/null || true; }
+is_removable() { [[ "$(lsblk -ndo RM "$1" 2>/dev/null || echo 0)" == "1" ]]; }
+
+device_id() {
+  local device="$1"
+  local uuid
+  local partuuid
+
+  uuid="$(uuid_of "$device")"
+  if [[ -n "$uuid" ]]; then
+    echo "UUID=${uuid}"
+    return 0
+  fi
+
+  partuuid="$(partuuid_of "$device")"
+  if [[ -n "$partuuid" ]]; then
+    echo "PARTUUID=${partuuid}"
+    return 0
+  fi
+
+  warn "Sem UUID/PARTUUID para ${device}. Usando caminho do dispositivo no fstab."
+  echo "${device}"
+}
 
 device_id() {
   local device="$1"
@@ -94,6 +112,12 @@ DEV_DEV="$(dev_by_label "$LABEL_DEV")"
 [[ -b "$DEV_DEV" ]] || die "Partição 'dev' não encontrada (LABEL=${LABEL_DEV} ou ${DEV_DEV_CAND})."
 [[ "$(fstype_of "$DEV_DEV")" == "ext4" ]] || die "Esperado ext4 em $DEV_DEV."
 ID_DEV="$(device_id "$DEV_DEV")"
+MP_DEV="/mnt/dev"
+SKIP_DEV=0
+if is_removable "$DEV_DEV"; then
+  warn "Disco removível detectado em ${DEV_DEV}. Não será adicionado ao fstab."
+  SKIP_DEV=1
+fi
 
 info "Detectado 'dev': $DEV_DEV (${ID_DEV})"
 
@@ -104,6 +128,12 @@ DEV_1TB="$(dev_by_label "$LABEL_1TB")"
 [[ -b "$DEV_1TB" ]] || die "Partição '1TB' não encontrada (LABEL=${LABEL_1TB} ou ${DEV_1TB_CAND})."
 [[ "$(fstype_of "$DEV_1TB")" == "ext4" ]] || die "Esperado ext4 em $DEV_1TB."
 ID_1TB="$(device_id "$DEV_1TB")"
+MP_1TB="/mnt/1TB"
+SKIP_1TB=0
+if is_removable "$DEV_1TB"; then
+  warn "Disco removível detectado em ${DEV_1TB}. Não será adicionado ao fstab."
+  SKIP_1TB=1
+fi
 
 info "Detectado '1TB': $DEV_1TB (${ID_1TB})"
 
@@ -138,7 +168,10 @@ awk -v id1="$ID_DEV" -v id2="$ID_1TB" -v mp1="$MP_DEV" -v mp2="$MP_1TB" '
 BEGIN { IGNORECASE = 1 }
 {
   # Se a linha contém o UUID ou o Mount Point, pula (deleta)
-  if ($0 ~ id1 || $0 ~ id2 || $2 == mp1 || $2 == mp2) next;
+  if (id1 != "" && $0 ~ id1) next;
+  if (id2 != "" && $0 ~ id2) next;
+  if (mp1 != "" && $2 == mp1) next;
+  if (mp2 != "" && $2 == mp2) next;
   print $0
 }
 ' "$FSTAB" >"$TMP"
@@ -147,8 +180,12 @@ BEGIN { IGNORECASE = 1 }
 {
   echo ""
   echo "# >>> auto-added by autofs-arch-ext4 (${TS})"
-  echo "$FSTAB_LINE_DEV"
-  echo "$FSTAB_LINE_1TB"
+  if [[ "$SKIP_DEV" -eq 0 ]]; then
+    echo "$FSTAB_LINE_DEV"
+  fi
+  if [[ "$SKIP_1TB" -eq 0 ]]; then
+    echo "$FSTAB_LINE_1TB"
+  fi
   echo "# <<<"
 } >>"$TMP"
 
