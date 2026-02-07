@@ -112,7 +112,7 @@ DEV_DEV="$(dev_by_label "$LABEL_DEV")"
 [[ -b "$DEV_DEV" ]] || die "Partição 'dev' não encontrada (LABEL=${LABEL_DEV} ou ${DEV_DEV_CAND})."
 [[ "$(fstype_of "$DEV_DEV")" == "ext4" ]] || die "Esperado ext4 em $DEV_DEV."
 ID_DEV="$(device_id "$DEV_DEV")"
-MP_DEV="/mnt/dev"
+MP_DEV="/run/media/dev"
 SKIP_DEV=0
 if is_removable "$DEV_DEV"; then
   warn "Disco removível detectado em ${DEV_DEV}. Não será adicionado ao fstab."
@@ -128,7 +128,7 @@ DEV_1TB="$(dev_by_label "$LABEL_1TB")"
 [[ -b "$DEV_1TB" ]] || die "Partição '1TB' não encontrada (LABEL=${LABEL_1TB} ou ${DEV_1TB_CAND})."
 [[ "$(fstype_of "$DEV_1TB")" == "ext4" ]] || die "Esperado ext4 em $DEV_1TB."
 ID_1TB="$(device_id "$DEV_1TB")"
-MP_1TB="/mnt/1TB"
+MP_1TB="/run/media/1TB"
 SKIP_1TB=0
 if is_removable "$DEV_1TB"; then
   warn "Disco removível detectado em ${DEV_1TB}. Não será adicionado ao fstab."
