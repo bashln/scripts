@@ -11,6 +11,13 @@ YELLOW='\e[33m'
 RED='\e[31m'
 RESET='\e[0m'
 
+# TUI (Charm Gum)
+GUM_AVAILABLE=0
+if command -v gum >/dev/null 2>&1; then
+    GUM_AVAILABLE=1
+fi
+export GUM_AVAILABLE
+
 # Função de Log Interna (Escreve no arquivo e na tela)
 _log() {
     local level="$1"
@@ -22,8 +29,18 @@ _log() {
     # Escrita no Arquivo (Sem cores, com timestamp)
     echo "[$timestamp] [$level] $msg" >> "$LOG_FILE"
 
-    # Escrita na Tela (Com cores)
-    printf "${color}[%s] %s${RESET}\n" "$level" "$msg" >&2
+    # Escrita na Tela (Com cores ou TUI)
+    if [[ $GUM_AVAILABLE -eq 1 ]]; then
+        local gum_level="info"
+        case "$level" in
+            WARN) gum_level="warn" ;;
+            FAIL) gum_level="error" ;;
+            *) gum_level="info" ;;
+        esac
+        gum log --level "$gum_level" -- "[$level] $msg" >&2
+    else
+        printf "${color}[%s] %s${RESET}\n" "$level" "$msg" >&2
+    fi
 }
 
 info() { _log "INFO" "$BLUE" "$*"; }
