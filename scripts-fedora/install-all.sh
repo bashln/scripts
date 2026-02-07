@@ -13,6 +13,9 @@ FAILED_STEPS=()
 # Inicializa o log de falhas (limpa execucoes anteriores)
 : > "$FAIL_LOG"
 
+# Marca a linha inicial do log para filtrar apenas a execucao atual
+_log_offset=$(wc -l < "$LOG_FILE" 2>/dev/null || echo 0)
+
 info "Iniciando instalacao Fedora. Log completo em: $LOG_FILE"
 
 # Mantem o sudo vivo em background para quando precisarmos
@@ -172,8 +175,8 @@ for step in "${STEPS[@]}"; do
 done
 
 # --- LOG DE FALHAS ---
-# Extrai apenas as linhas [FAIL] do log principal para o log de falhas
-grep "\[FAIL\]" "$LOG_FILE" > "$FAIL_LOG" 2>/dev/null
+# Extrai apenas as linhas [FAIL] desta execucao (ignora execucoes anteriores)
+tail -n +$((_log_offset + 1)) "$LOG_FILE" | grep "\[FAIL\]" > "$FAIL_LOG" 2>/dev/null
 
 # --- RELATORIO ---
 echo ""
