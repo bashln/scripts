@@ -11,12 +11,13 @@ main() {
         "shfmt"
         "ripgrep"
         "fd-find"
-        "prettier"
     )
 
     for pkg in "${packages[@]}"; do
         ensure_package "$pkg"
     done
+
+    ensure_npm_global "prettier" "prettier"
 
     # Ruff pode nao estar nos repos oficiais
     ensure_package "ruff" || {

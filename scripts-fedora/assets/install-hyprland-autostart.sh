@@ -13,13 +13,14 @@ main() {
 
     if [ ! -f "$HYPRLAND_CONFIG" ]; then
         warn "Configuracao do Hyprland nao encontrada em $HYPRLAND_CONFIG"
-        warn "Por favor, instale o Hyprland primeiro"
-        return 1
+        warn "Pulando autostart (opcional)."
+        return 0
     fi
 
     if [ ! -f "$OVERRIDES_CONFIG" ]; then
         warn "Arquivo de autostart nao encontrado em $OVERRIDES_CONFIG"
-        return 1
+        warn "Pulando autostart (opcional)."
+        return 0
     fi
 
     if grep -Fxq "$SOURCE_LINE" "$HYPRLAND_CONFIG"; then

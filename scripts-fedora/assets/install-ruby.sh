@@ -12,8 +12,8 @@ main() {
     fi
 
     if ! command -v asdf &>/dev/null; then
-        fail "asdf nao esta instalado. Por favor, execute install-asdf.sh primeiro."
-        exit 1
+        warn "asdf nao esta instalado. Execute install-asdf.sh se quiser instalar Ruby via asdf."
+        return 0
     fi
 
     # Instala dependencias de build do Ruby (Fedora)
