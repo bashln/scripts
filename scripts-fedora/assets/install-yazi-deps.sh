@@ -6,6 +6,8 @@ source "$(dirname "${BASH_SOURCE[0]}")/../lib/utils.sh"
 main() {
     info "Instalando dependencias para Yazi"
 
+    ensure_rpmfusion
+
     packages=(
         "ffmpeg"
         "p7zip"

@@ -10,12 +10,13 @@ main() {
         "vulkan-loader"
         "vulkan-tools"
         "vulkan-validation-layers"
-        "vkd3d"
     )
 
     for pkg in "${packages[@]}"; do
         ensure_package "$pkg"
     done
+
+    ensure_package "vkd3d" || warn "vkd3d nao encontrado nos repos (opcional)."
 
     ok "Vulkan stack instalada."
 }

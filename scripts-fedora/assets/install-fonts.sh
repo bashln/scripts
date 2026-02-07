@@ -9,12 +9,12 @@ main() {
     # Fontes disponiveis nos repos oficiais do Fedora
     packages=(
         "fira-code-fonts"
+        "fira-mono-fonts"
         "jetbrains-mono-fonts-all"
         "google-noto-fonts-common"
         "google-noto-emoji-fonts"
         "google-noto-sans-fonts"
         "google-noto-serif-fonts"
-        "mozilla-fira-mono-fonts"
     )
 
     for pkg in "${packages[@]}"; do
