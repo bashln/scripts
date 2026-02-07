@@ -17,11 +17,7 @@ source "$(dirname "${BASH_SOURCE[0]}")/../lib/utils.sh"
 LABEL_DEV="${LABEL_DEV:-dev}"
 LABEL_1TB="${LABEL_1TB:-1TB}"
 DEV_DEV_CAND="${DEV_DEV_CAND:-/dev/sda1}"
-DEV_1TB_CAND="${DEV_1TB_CAND:-/dev/sdb2}"
-
-# Pontos de montagem
-MP_DEV="/mnt/dev"
-MP_1TB="/mnt/1TB"
+DEV_1TB_CAND="${DEV_1TB_CAND:-/dev/sdb1}"
 
 # --- Helpers Locais ---
 # Função die local adaptada para usar o fail da lib
@@ -43,7 +39,7 @@ require_cmd() {
 REAL_USER="${SUDO_USER:-$USER}"
 
 if [[ "$REAL_USER" == "root" ]]; then
-    warn "Executando como root puro. Symlinks serão criados em /root/."
+    warn "Executando como root puro."
 fi
 
 REAL_UID="$(id -u "$REAL_USER")"
@@ -61,7 +57,30 @@ require_cmd mount
 # --- Helpers de Disco ---
 dev_by_label() { blkid -t "LABEL=$1" -o device 2>/dev/null | head -n1 || true; }
 uuid_of()      { blkid -s UUID -o value "$1" 2>/dev/null || true; }
+partuuid_of()  { blkid -s PARTUUID -o value "$1" 2>/dev/null || true; }
 fstype_of()    { lsblk -ndo FSTYPE "$1" 2>/dev/null || true; }
+is_removable() { [[ "$(lsblk -ndo RM "$1" 2>/dev/null || echo 0)" == "1" ]]; }
+
+device_id() {
+  local device="$1"
+  local uuid
+  local partuuid
+
+  uuid="$(uuid_of "$device")"
+  if [[ -n "$uuid" ]]; then
+    echo "UUID=${uuid}"
+    return 0
+  fi
+
+  partuuid="$(partuuid_of "$device")"
+  if [[ -n "$partuuid" ]]; then
+    echo "PARTUUID=${partuuid}"
+    return 0
+  fi
+
+  warn "Sem UUID/PARTUUID para ${device}. Usando caminho do dispositivo no fstab."
+  echo "${device}"
+}
 
 # --- Localizar Partições ---
 
@@ -71,10 +90,15 @@ DEV_DEV="$(dev_by_label "$LABEL_DEV")"
 
 [[ -b "$DEV_DEV" ]] || die "Partição 'dev' não encontrada (LABEL=${LABEL_DEV} ou ${DEV_DEV_CAND})."
 [[ "$(fstype_of "$DEV_DEV")" == "ext4" ]] || die "Esperado ext4 em $DEV_DEV."
-UUID_DEV="$(uuid_of "$DEV_DEV")"
-[[ -n "$UUID_DEV" ]] || die "Sem UUID para $DEV_DEV."
+ID_DEV="$(device_id "$DEV_DEV")"
+MP_DEV="/mnt/${REAL_USER}/dev"
+SKIP_DEV=0
+if is_removable "$DEV_DEV"; then
+  warn "Disco removível detectado em ${DEV_DEV}. Não será adicionado ao fstab."
+  SKIP_DEV=1
+fi
 
-info "Detectado 'dev': $DEV_DEV ($UUID_DEV)"
+info "Detectado 'dev': $DEV_DEV (${ID_DEV})"
 
 # Processar 1TB
 DEV_1TB="$(dev_by_label "$LABEL_1TB")"
@@ -82,10 +106,15 @@ DEV_1TB="$(dev_by_label "$LABEL_1TB")"
 
 [[ -b "$DEV_1TB" ]] || die "Partição '1TB' não encontrada (LABEL=${LABEL_1TB} ou ${DEV_1TB_CAND})."
 [[ "$(fstype_of "$DEV_1TB")" == "ext4" ]] || die "Esperado ext4 em $DEV_1TB."
-UUID_1TB="$(uuid_of "$DEV_1TB")"
-[[ -n "$UUID_1TB" ]] || die "Sem UUID para $DEV_1TB."
+ID_1TB="$(device_id "$DEV_1TB")"
+MP_1TB="/mnt/${REAL_USER}/1TB"
+SKIP_1TB=0
+if is_removable "$DEV_1TB"; then
+  warn "Disco removível detectado em ${DEV_1TB}. Não será adicionado ao fstab."
+  SKIP_1TB=1
+fi
 
-info "Detectado '1TB': $DEV_1TB ($UUID_1TB)"
+info "Detectado '1TB': $DEV_1TB (${ID_1TB})"
 
 # --- Preparação do Sistema ---
 
@@ -102,8 +131,8 @@ umount -l "$MP_1TB" 2>/dev/null || true
 # --- Manipulação do FSTAB ---
 
 EXT4_OPTS="defaults,noatime,x-systemd.automount,nofail"
-FSTAB_LINE_DEV="UUID=${UUID_DEV} ${MP_DEV} ext4 ${EXT4_OPTS} 0 2"
-FSTAB_LINE_1TB="UUID=${UUID_1TB} ${MP_1TB} ext4 ${EXT4_OPTS} 0 2"
+FSTAB_LINE_DEV="${ID_DEV} ${MP_DEV} ext4 ${EXT4_OPTS} 0 2"
+FSTAB_LINE_1TB="${ID_1TB} ${MP_1TB} ext4 ${EXT4_OPTS} 0 2"
 
 FSTAB="/etc/fstab"
 TS="$(date +%Y%m%d-%H%M%S)"
@@ -114,11 +143,14 @@ cp -a "$FSTAB" "$BACKUP"
 info "Backup do fstab criado: $BACKUP"
 
 # AWK Magic: Remove referências antigas aos UUIDs ou Mountpoints
-awk -v uuid1="$UUID_DEV" -v uuid2="$UUID_1TB" -v mp1="$MP_DEV" -v mp2="$MP_1TB" '
+awk -v id1="$ID_DEV" -v id2="$ID_1TB" -v mp1="$MP_DEV" -v mp2="$MP_1TB" '
 BEGIN { IGNORECASE = 1 }
 {
   # Se a linha contém o UUID ou o Mount Point, pula (deleta)
-  if ($0 ~ uuid1 || $0 ~ uuid2 || $2 == mp1 || $2 == mp2) next;
+  if (id1 != "" && $0 ~ id1) next;
+  if (id2 != "" && $0 ~ id2) next;
+  if (mp1 != "" && $2 == mp1) next;
+  if (mp2 != "" && $2 == mp2) next;
   print $0
 }
 ' "$FSTAB" >"$TMP"
@@ -127,8 +159,12 @@ BEGIN { IGNORECASE = 1 }
 {
   echo ""
   echo "# >>> auto-added by autofs-arch-ext4 (${TS})"
-  echo "$FSTAB_LINE_DEV"
-  echo "$FSTAB_LINE_1TB"
+  if [[ "$SKIP_DEV" -eq 0 ]]; then
+    echo "$FSTAB_LINE_DEV"
+  fi
+  if [[ "$SKIP_1TB" -eq 0 ]]; then
+    echo "$FSTAB_LINE_1TB"
+  fi
   echo "# <<<"
 } >>"$TMP"
 
@@ -160,12 +196,4 @@ ls "$MP_1TB" >/dev/null 2>&1 || true
 
 # --- Symlinks na Home ---
 
-info "Atualizando symlinks em $HOME_DIR..."
-ln -sfn "$MP_DEV" "$HOME_DIR/dev"
-ln -sfn "$MP_1TB" "$HOME_DIR/1TB"
-
-# Correção de permissão crítica: O symlink foi criado pelo root, 
-# precisamos garantir que o dono seja o usuário.
-chown -h "$REAL_UID:$REAL_GID" "$HOME_DIR/dev" "$HOME_DIR/1TB"
-
-ok "Configuração de disco concluída. Acesso em ~/dev e ~/1TB"
+ok "Configuração de disco concluída. Acesso em ${MP_DEV} e ${MP_1TB}"
