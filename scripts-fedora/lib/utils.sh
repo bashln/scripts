@@ -59,7 +59,7 @@ ensure_package() {
 ensure_group() {
     local grp="$1"
 
-    if dnf group list --installed 2>/dev/null | grep -qi "$grp"; then
+    if dnf group list --installed --ids 2>/dev/null | grep -qi "$grp"; then
         info "Grupo '$grp' ja instalado. Pulando."
         return 0
     fi
@@ -133,6 +133,56 @@ ensure_rpmfusion() {
         ok "RPM Fusion habilitado."
     else
         fail "Erro ao habilitar RPM Fusion. Verifique o log: $LOG_FILE"
+        return 1
+    fi
+}
+
+# Instala pacotes via cargo (binarios Rust) se ainda nao estiverem disponiveis
+# Uso: ensure_cargo_package "eza" ["binario"]
+ensure_cargo_package() {
+    local pkg="$1"
+    local bin="${2:-$1}"
+
+    if command -v "$bin" &>/dev/null; then
+        info "Binario '$bin' ja instalado. Pulando."
+        return 0
+    fi
+
+    if ! command -v cargo &>/dev/null; then
+        warn "cargo nao encontrado. Instale o Rust primeiro (install-rust.sh)."
+        return 1
+    fi
+
+    info "Instalando '$pkg' via cargo..."
+    if cargo install --locked "$pkg" >> "$LOG_FILE" 2>&1; then
+        ok "Pacote '$pkg' instalado via cargo."
+    else
+        fail "Erro ao instalar '$pkg' via cargo. Verifique o log: $LOG_FILE"
+        return 1
+    fi
+}
+
+# Instala pacotes globais do npm
+# Uso: ensure_npm_global "prettier" ["binario"]
+ensure_npm_global() {
+    local pkg="$1"
+    local bin="${2:-$1}"
+
+    if command -v "$bin" &>/dev/null; then
+        info "Binario '$bin' ja instalado. Pulando."
+        return 0
+    fi
+
+    if ! command -v npm &>/dev/null; then
+        warn "npm nao encontrado. Instale o Node.js primeiro (install-nodejs.sh)."
+        return 1
+    fi
+
+    info "Instalando '$pkg' via npm global..."
+    if npm install -g "$pkg" >> "$LOG_FILE" 2>&1; then
+        ok "Pacote '$pkg' instalado via npm."
+    else
+        fail "Erro ao instalar '$pkg' via npm. Verifique o log: $LOG_FILE"
         return 1
     fi
 }
