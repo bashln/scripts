@@ -153,6 +153,7 @@ STEPS=(
     "install-lsps.sh"
     "install-vscode.sh"
     "install-lazygit.sh"
+    "install-neovim.sh"
     "install-emacs.sh"
     "configure-git.sh"
 
@@ -173,6 +174,7 @@ STEPS=(
     "install-flatpak-flathub.sh"
     "install-flatpak-pupgui2.sh"
     "install-flatpak-spotify.sh"
+    "install-flatpak-microsoft-edge.sh"
 
     # ----------------------------------------
     # 11. Desktop Environment Overrides (Hyprland specific)
