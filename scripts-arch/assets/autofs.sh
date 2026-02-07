@@ -81,7 +81,8 @@ device_id() {
     return 0
   fi
 
-  die "Sem UUID/PARTUUID para $device."
+  warn "Sem UUID/PARTUUID para ${device}. Usando caminho do dispositivo no fstab."
+  echo "${device}"
 }
 
 # --- Localizar Partições ---
