@@ -3,11 +3,15 @@ set -u
 
 BASE_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 export LOG_FILE="$BASE_DIR/install.log"
+FAIL_LOG="$BASE_DIR/install-failures.log"
 
 source "$BASE_DIR/lib/utils.sh"
 
 SUCCESS_STEPS=()
 FAILED_STEPS=()
+
+# Inicializa o log de falhas (limpa execucoes anteriores)
+: > "$FAIL_LOG"
 
 info "Iniciando instalacao Fedora. Log completo em: $LOG_FILE"
 
@@ -167,12 +171,16 @@ for step in "${STEPS[@]}"; do
     run_step "$step"
 done
 
+# --- LOG DE FALHAS ---
+# Extrai apenas as linhas [FAIL] do log principal para o log de falhas
+grep "\[FAIL\]" "$LOG_FILE" > "$FAIL_LOG" 2>/dev/null
+
 # --- RELATORIO ---
 echo ""
 echo "=========================================="
 echo "          RESUMO DA OPERACAO              "
 echo "=========================================="
-echo "Log file: $LOG_FILE"
+echo "Log completo: $LOG_FILE"
 echo ""
 
 if [ ${#SUCCESS_STEPS[@]} -gt 0 ]; then
@@ -186,9 +194,12 @@ if [ ${#FAILED_STEPS[@]} -gt 0 ]; then
     printf "${RED}FALHAS (${#FAILED_STEPS[@]}):${RESET}\n"
     printf "  - %s\n" "${FAILED_STEPS[@]}"
     echo ""
-    warn "Verifique o arquivo $LOG_FILE."
+    warn "Log de falhas salvo em: $FAIL_LOG"
+    warn "Log completo em: $LOG_FILE"
     exit 1
 else
+    # Remove o log de falhas vazio quando nao ha erros
+    rm -f "$FAIL_LOG"
     ok "Instalacao completa sem erros!"
     exit 0
 fi
