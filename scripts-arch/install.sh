@@ -89,7 +89,7 @@ STEPS=(
   "install-dev-tools.sh"
   "install-git.sh"
   "install-stow.sh"
-  # "install-yay.sh" # AUR helper (needed early for AUR packages)
+  "install-yay.sh" # AUR helper (needed early for AUR packages)
   "install-curl.sh"
   "install-unzip.sh"
   "install-jq.sh"
@@ -101,10 +101,10 @@ STEPS=(
   # 2. Languages & Runtimes
   # ----------------------------------------
   "install-go-tools.sh" # Go itself is installed via ensure_package in this script
-  # "install-python.sh"
-  # "install-python-tools.sh"
-  # "install-ruby.sh" # Depends on asdf and base-devel, so asdf should be installed
-  # "install-rust.sh"
+  "install-python.sh"
+  "install-python-tools.sh"
+  "install-ruby.sh" # Depends on asdf and base-devel, so asdf should be installed
+  "install-rust.sh"
 
   # ----------------------------------------
   # 3. Graphics, Multimedia & Drivers
@@ -154,7 +154,7 @@ STEPS=(
   # "install-vscode.sh"
   "install-lazygit.sh"
   "install-emacs.sh"
-  "install-neovim.sh"
+  # "install-neovim.sh"
   "configure-git.sh" # Configuration, depends on git
 
   # ----------------------------------------
@@ -166,14 +166,14 @@ STEPS=(
   "install-yazi.sh"      # Then Yazi itself
   "install-steam.sh"
   "install-wine-stack.sh"
-  "install-postgresql.sh"
+  # "install-postgresql.sh" # need user interaction, install it using ./assets/install-postgresql.sh
 
   # ----------------------------------------
   # 9. Flatpak Applications (Requires Flatpak setup first)
   # ----------------------------------------
   "install-flatpak-flathub.sh"
   "install-flatpak-pupgui2.sh"
-  "install-flatpak-spotify.sh"
+  # "install-flatpak-spotify.sh"
 
   # ----------------------------------------
   # 10. Desktop Environment Overrides (Hyprland specific)

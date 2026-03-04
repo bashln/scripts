@@ -64,6 +64,28 @@ bshln-scripts/
 
 ## Como Usar
 
+## Uso da TUI (MVP)
+
+Execute a interface TUI a partir da raiz do repositorio:
+
+```bash
+go run ./cmd/bashln-tui --root ./scripts-arch
+```
+
+Atalhos principais:
+
+- `j/k` ou setas: navegar na lista
+- `espaco` ou `enter`: habilitar/desabilitar script
+- `a`: toggle all
+- `r`: executar scripts habilitados
+- `esc`/`ctrl+c`: cancelar execucao em andamento
+- `q`: sair
+
+Flags disponiveis:
+
+- `--root <path>`: define a raiz do repositorio ou o diretorio `scripts-arch`
+- `--no-alt-screen`: desativa a tela alternativa do terminal
+
 ### Arch Linux / CachyOS
 
 ```bash

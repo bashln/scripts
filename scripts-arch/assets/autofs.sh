@@ -1,6 +1,6 @@
 #!/bin/bash
 # Flag para o install-all.sh saber que precisa de sudo
-REQUIRES_ROOT=1 
+REQUIRES_ROOT=1
 
 set -euo pipefail
 SCRIPTS_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
@@ -22,14 +22,14 @@ DEV_1TB_CAND="${DEV_1TB_CAND:-/dev/sdb1}"
 # --- Helpers Locais ---
 # Função die local adaptada para usar o fail da lib
 die() {
-  fail "$*"
-  exit 1
+	fail "$*"
+	exit 1
 }
 
 require_cmd() {
-  if ! command -v "$1" >/dev/null 2>&1; then
-    die "Comando requerido não encontrado: $1"
-  fi
+	if ! command -v "$1" >/dev/null 2>&1; then
+		die "Comando requerido não encontrado: $1"
+	fi
 }
 
 # --- Checagens Iniciais ---
@@ -39,7 +39,7 @@ require_cmd() {
 REAL_USER="${SUDO_USER:-$USER}"
 
 if [[ "$REAL_USER" == "root" ]]; then
-    warn "Executando como root puro."
+	warn "Executando como root puro."
 fi
 
 REAL_UID="$(id -u "$REAL_USER")"
@@ -56,51 +56,30 @@ require_cmd mount
 
 # --- Helpers de Disco ---
 dev_by_label() { blkid -t "LABEL=$1" -o device 2>/dev/null | head -n1 || true; }
-uuid_of()      { blkid -s UUID -o value "$1" 2>/dev/null || true; }
-partuuid_of()  { blkid -s PARTUUID -o value "$1" 2>/dev/null || true; }
-fstype_of()    { lsblk -ndo FSTYPE "$1" 2>/dev/null || true; }
+uuid_of() { blkid -s UUID -o value "$1" 2>/dev/null || true; }
+partuuid_of() { blkid -s PARTUUID -o value "$1" 2>/dev/null || true; }
+fstype_of() { lsblk -ndo FSTYPE "$1" 2>/dev/null || true; }
 is_removable() { [[ "$(lsblk -ndo RM "$1" 2>/dev/null || echo 0)" == "1" ]]; }
 
 device_id() {
-  local device="$1"
-  local uuid
-  local partuuid
+	local device="$1"
+	local uuid
+	local partuuid
 
-  uuid="$(uuid_of "$device")"
-  if [[ -n "$uuid" ]]; then
-    echo "UUID=${uuid}"
-    return 0
-  fi
+	uuid="$(uuid_of "$device")"
+	if [[ -n "$uuid" ]]; then
+		echo "UUID=${uuid}"
+		return 0
+	fi
 
-  partuuid="$(partuuid_of "$device")"
-  if [[ -n "$partuuid" ]]; then
-    echo "PARTUUID=${partuuid}"
-    return 0
-  fi
+	partuuid="$(partuuid_of "$device")"
+	if [[ -n "$partuuid" ]]; then
+		echo "PARTUUID=${partuuid}"
+		return 0
+	fi
 
-  warn "Sem UUID/PARTUUID para ${device}. Usando caminho do dispositivo no fstab."
-  echo "${device}"
-}
-
-device_id() {
-  local device="$1"
-  local uuid
-  local partuuid
-
-  uuid="$(uuid_of "$device")"
-  if [[ -n "$uuid" ]]; then
-    echo "UUID=${uuid}"
-    return 0
-  fi
-
-  partuuid="$(partuuid_of "$device")"
-  if [[ -n "$partuuid" ]]; then
-    echo "PARTUUID=${partuuid}"
-    return 0
-  fi
-
-  warn "Sem UUID/PARTUUID para ${device}. Usando caminho do dispositivo no fstab."
-  echo "${device}"
+	warn "Sem UUID/PARTUUID para ${device}. Usando caminho do dispositivo no fstab."
+	echo "${device}"
 }
 
 # --- Localizar Partições ---
@@ -115,8 +94,8 @@ ID_DEV="$(device_id "$DEV_DEV")"
 MP_DEV="/run/media/dev"
 SKIP_DEV=0
 if is_removable "$DEV_DEV"; then
-  warn "Disco removível detectado em ${DEV_DEV}. Não será adicionado ao fstab."
-  SKIP_DEV=1
+	warn "Disco removível detectado em ${DEV_DEV}. Não será adicionado ao fstab."
+	SKIP_DEV=1
 fi
 
 info "Detectado 'dev': $DEV_DEV (${ID_DEV})"
@@ -131,8 +110,8 @@ ID_1TB="$(device_id "$DEV_1TB")"
 MP_1TB="/run/media/1TB"
 SKIP_1TB=0
 if is_removable "$DEV_1TB"; then
-  warn "Disco removível detectado em ${DEV_1TB}. Não será adicionado ao fstab."
-  SKIP_1TB=1
+	warn "Disco removível detectado em ${DEV_1TB}. Não será adicionado ao fstab."
+	SKIP_1TB=1
 fi
 
 info "Detectado '1TB': $DEV_1TB (${ID_1TB})"
@@ -178,23 +157,23 @@ BEGIN { IGNORECASE = 1 }
 
 # Adiciona as novas linhas
 {
-  echo ""
-  echo "# >>> auto-added by autofs-arch-ext4 (${TS})"
-  if [[ "$SKIP_DEV" -eq 0 ]]; then
-    echo "$FSTAB_LINE_DEV"
-  fi
-  if [[ "$SKIP_1TB" -eq 0 ]]; then
-    echo "$FSTAB_LINE_1TB"
-  fi
-  echo "# <<<"
+	echo ""
+	echo "# >>> auto-added by autofs-arch-ext4 (${TS})"
+	if [[ "$SKIP_DEV" -eq 0 ]]; then
+		echo "$FSTAB_LINE_DEV"
+	fi
+	if [[ "$SKIP_1TB" -eq 0 ]]; then
+		echo "$FSTAB_LINE_1TB"
+	fi
+	echo "# <<<"
 } >>"$TMP"
 
 # --- Validação e Aplicação ---
 
 info "Verificando integridade do novo fstab..."
-if ! findmnt --verify -F "$TMP" >> "$LOG_FILE" 2>&1; then
-  rm -f "$TMP"
-  die "findmnt --verify falhou. O fstab original foi mantido intacto."
+if ! findmnt --verify -F "$TMP" >>"$LOG_FILE" 2>&1; then
+	rm -f "$TMP"
+	die "findmnt --verify falhou. O fstab original foi mantido intacto."
 fi
 
 # Commit
@@ -204,11 +183,11 @@ systemctl daemon-reload
 # --- Teste de Montagem ---
 
 info "Testando montagem (mount -a)..."
-if ! mount -a >> "$LOG_FILE" 2>&1; then
-  warn "mount -a falhou! Restaurando backup..."
-  cp -af "$BACKUP" "$FSTAB"
-  systemctl daemon-reload
-  die "Erro crítico ao montar. Rollback aplicado com sucesso."
+if ! mount -a >>"$LOG_FILE" 2>&1; then
+	warn "mount -a falhou! Restaurando backup..."
+	cp -af "$BACKUP" "$FSTAB"
+	systemctl daemon-reload
+	die "Erro crítico ao montar. Rollback aplicado com sucesso."
 fi
 
 # Trigger do automount
