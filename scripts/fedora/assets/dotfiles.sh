@@ -22,8 +22,14 @@ if [[ ! -d "$DOTFILES_DIR" ]]; then
 else
     info "Atualizando dotfiles..."
     cd "$DOTFILES_DIR"
-    git pull origin "$DOTFILES_BRANCH"
-    ok "Dotfiles atualizados"
+    git fetch origin
+    if git diff --quiet HEAD "origin/$DOTFILES_BRANCH" 2>/dev/null; then
+        ok "Dotfiles já atualizados"
+    else
+        git checkout --detach "origin/$DOTFILES_BRANCH" 2>/dev/null || true
+        git checkout -B "$DOTFILES_BRANCH" "origin/$DOTFILES_BRANCH" 2>/dev/null || true
+        ok "Dotfiles atualizados"
+    fi
 fi
 
 mkdir -p ~/.config
