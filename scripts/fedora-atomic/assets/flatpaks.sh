@@ -15,16 +15,15 @@ ensure_flathub
 
 # Preferencia por Flatpak no Atomic para apps graficos de desktop.
 apps=(
-    "com.spotify.Client"
-    "com.microsoft.Edge"
-    "com.visualstudio.code"
-    "org.videolan.VLC"
-    "org.remmina.Remmina"
-    "net.davidotek.pupgui2"
+	"com.spotify.Client"
+	"com.microsoft.Edge"
+	"org.videolan.VLC"
+	"org.remmina.Remmina"
+	"net.davidotek.pupgui2"
 )
 
 for app in "${apps[@]}"; do
-    flatpak_install "$app"
+	flatpak_install "$app"
 done
 
 ok "Aplicacoes Flatpak concluidas"

@@ -35,11 +35,9 @@ if has_command cargo; then
 	if has_command just; then
 		info "just ja instalado"
 	else
-		cargo install just --quiet
+		cargo install just --quiet 2>/dev/null || info "just skipado"
 	fi
 
-	cargo install bat --quiet 2>/dev/null || info "bat skipado (pode falhar em sandbox)"
-	cargo install eza --quiet 2>/dev/null || info "eza skipado"
 	cargo install zellij --quiet 2>/dev/null || info "zellij skipado"
 fi
 
