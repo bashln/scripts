@@ -45,6 +45,6 @@ for font in "${NERD_FONTS[@]}"; do
 	install_nerd_font "$font" || warn "Falha ao instalar $font"
 done
 
-fc-cache -f >/dev/null 2>&1
+fc-cache -f >/dev/null 2>&1 || true
 
 ok "Fontes instaladas em $local_fonts_dir"
